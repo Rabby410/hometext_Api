@@ -4,12 +4,12 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreCategoryRequest extends FormRequest
+class StoreSubCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
-    public function authorize(): bool
+    final public function authorize(): bool
     {
         return true;
     }
@@ -19,11 +19,12 @@ class StoreCategoryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
-    public function rules(): array
+    final public function rules(): array
     {
         return [
             'name' => 'required|min:3|max:50|string',
-            'slug' => 'required|min:3|max:50|string|unique:categories',
+            'category_id' => 'required|numeric',
+            'slug' => 'required|min:3|max:50|string|unique:sub_categories',
             'serial' => 'required|numeric',
             'status' => 'required|numeric',
             'description' => 'max:200|string'

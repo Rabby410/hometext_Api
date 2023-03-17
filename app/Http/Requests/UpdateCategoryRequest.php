@@ -19,10 +19,14 @@ class UpdateCategoryRequest extends FormRequest
      *
      * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
      */
-    public function rules(): array
+    final public function rules(): array
     {
         return [
-            //
+            'name' => 'required|min:3|max:50|string',
+            'slug' => 'required|min:3|max:50|string|unique:categories,slug,'.$this->id,
+            'serial' => 'required|numeric',
+            'status' => 'required|numeric',
+            'description' => 'max:200|string'
         ];
     }
 }

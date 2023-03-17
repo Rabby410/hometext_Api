@@ -2,22 +2,22 @@
 
 namespace App\Models;
 
-use App\Models\User;
-use Illuminate\Contracts\Pagination\LengthAwarePaginator;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Collection;
 
-class Category extends Model
+class SubCategory extends Model
 {
     use HasFactory;
-    public const IMAGE_UPLOAD_PATH = 'images/uploads/category/';
-    public const THUMB_IMAGE_UPLOAD_PATH = 'images/uploads/category_thumb/';
+    public const IMAGE_UPLOAD_PATH = 'images/uploads/sub_category/';
+    public const THUMB_IMAGE_UPLOAD_PATH = 'images/uploads/sub_category_thumb/';
 
     protected $fillable = [
         'name',
+        'category_id',
         'slug',
         'serial',
         'status',
@@ -26,20 +26,22 @@ class Category extends Model
         'user_id'
     ];
 
-    /**
+
+     /**
      *@param array $input
      *@return Builder|Model
      */
 
-    final public function storeCategory(array $input): Builder|Model
-    {
-        return self::query()->create($input);
-    }
-    /**
+     final public function storeSubCategory(array $input): Builder|Model
+     {
+         return self::query()->create($input);
+     }
+
+     /**
      *@param array $input
     * @return LengthAwarePaginator
      */
-    final public function getAllCategories(array $input):LengthAwarePaginator
+    final public function getAllSubCategories(array $input):LengthAwarePaginator
     {
         $per_page = $input['per_page'] ?? 10;
         $query = self::query();
@@ -49,17 +51,8 @@ class Category extends Model
         if (!empty($input['order_by'])) {
             $query->orderBy($input['order_by'], $input['direction'] ?? 'asc');
         }
-        return $query->with('user:id,name')->paginate($per_page);
+        return $query->with(['user:id,name', 'category:id,name'])->paginate($per_page);
     }
-    /**
-     * @return \Illuminate\Support\Collection
-     */
-    final public function getCategoryIdAndName():Collection
-    {
-        return self::query()->select('id', 'name')->get();
-    }
-
-
     /**
      *@return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -67,4 +60,13 @@ class Category extends Model
     {
         return $this->belongsTo(User::class);
     }
+    /**
+     *@return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    final public function category(): BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
 }
+
+
