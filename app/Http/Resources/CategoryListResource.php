@@ -7,6 +7,20 @@ use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+
+/**
+ *@property mixed $id
+ *@property mixed $name
+ *@property mixed $slug
+ *@property mixed $serial
+ *@property mixed $status
+ *@property mixed $user
+ *@property mixed $created_at
+ *@property mixed $updated_at
+ *@property mixed $photo
+ *@property mixed $description
+ */
+
 class CategoryListResource extends JsonResource
 {
     /**

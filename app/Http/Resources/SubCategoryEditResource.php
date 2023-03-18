@@ -7,6 +7,17 @@ use App\Manager\ImageUploadManager;
 use App\Models\SubCategory;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property mixed $id
+ * @property mixed $name
+ * @property mixed $slug
+ * @property mixed $description
+ * @property mixed $serial
+ * @property mixed $status
+ * @property mixed $photo
+ * @property mixed $category_id
+ */
+
 class SubCategoryEditResource extends JsonResource
 {
     /**

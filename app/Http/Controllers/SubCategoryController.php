@@ -45,7 +45,7 @@ class SubCategoryController extends Controller
      * @param Category $category
      * @return SubCategoryEditResource
      */
-    public function show(SubCategory $subCategory):SubCategoryEditResource
+    final public function show(SubCategory $subCategory):SubCategoryEditResource
     {
         return new SubCategoryEditResource($subCategory);
     }
@@ -60,10 +60,19 @@ class SubCategoryController extends Controller
 
     /**
      * Update the specified resource in storage.
+     *@param UpdateSubCategoryRequest $request
+     *@param SubCategory $subCategory
+     *@return JsonResponse
      */
-    public function update(UpdateSubCategoryRequest $request, SubCategory $subCategory)
+    final public function update(UpdateSubCategoryRequest $request, SubCategory $subCategory):JsonResponse
     {
-        //
+        $sub_category_data = $request->except('photo');
+        $sub_category_data['slug'] = Str::slug($request->input('slug'));
+        if($request->has('photo')){
+            $category_data['photo']  = $this->processImageUpload($request->input('photo'),  $sub_category_data['slug'], $subCategory->photo);
+        }
+        $subCategory->update($sub_category_data);
+        return response()->json(['msg'=>'SUb Category Updated Successfully', 'cls' => 'success']);
     }
 
     /**

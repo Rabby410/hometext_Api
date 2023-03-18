@@ -27,9 +27,10 @@ class CategoryController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param StoreCategoryRequest $request
+     * @return JsonResponse
      */
-    public function store(StoreCategoryRequest $request)
+    final public function store(StoreCategoryRequest $request):JsonResponse
     {
         $category = $request->except('photo');
         $category['slug'] = Str::slug($request->input('slug'));
@@ -45,9 +46,9 @@ class CategoryController extends Controller
      * @param Category $category
      * @return SubCategoryEditResource
      */
-    final public function show(Category $category):SubCategoryEditResource
+    final public function show(Category $category):CategoryEditResource
     {
-        return new SubCategoryEditResource($category);
+        return new CategoryEditResource($category);
     }
 
     /**
