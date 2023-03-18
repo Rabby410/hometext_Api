@@ -2,8 +2,8 @@
 namespace App\Manager;
 
 use Intervention\Image\Facades\Image;
-
-
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\Routing\UrlGenerator;
 
 
 
@@ -11,7 +11,7 @@ class ImageUploadManager
 {
     public const DEFAULT_IMAGE ='images/hometex-logo.ico';
     /**
-     *@param string $name
+    *@param string $name
     *@param int $width
     *@param int $height
     *@param string $path

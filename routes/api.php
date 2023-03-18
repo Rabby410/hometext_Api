@@ -4,7 +4,12 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\DistrictController;
+use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\SubCategoryController;
+use App\Manager\scriptManager;
+use App\Models\District;
+use App\Models\Division;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,7 +23,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Route::get('test', [scriptManager::class, 'getLocationData']);
 Route::post('login', [AuthController::class, 'login']);
+Route::get('divisions', [DivisionController::class, 'index']);
+Route::get('district/{id}', [DistrictController::class, 'index']);
 
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
