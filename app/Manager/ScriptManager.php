@@ -16,7 +16,7 @@ class scriptManager
         $response = Http::get($url);
         $divisions = json_decode($response->body(), true);
         foreach ($divisions['module'] as $key => $division) {
-            if ($key == 7) {
+            if ($key == 1) {
 
                 $division_data['name'] = $division['name'];
                 $division_data['original_id'] = $division['id'];
@@ -50,6 +50,6 @@ class scriptManager
                 }
             }
         }
-        echo'success';
+        echo'success 1';
     }
 }

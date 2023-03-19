@@ -10,12 +10,12 @@ use App\Http\Requests\UpdateDistrictRequest;
 class DistrictController extends Controller
 {
      /**
-     * @param int $id
+     * @param int $division_id
      * @return JsonResponse
      */
-    final public function index(int $id):JsonResponse
+    final public function index(int $division_id):JsonResponse
     {
-        $districts = (new District())->getDistrictByDivisionId($id);
+        $districts = (new District())->getDistrictByDivisionId($division_id);
         return response()->json($districts);
     }
 
