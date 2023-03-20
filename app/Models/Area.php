@@ -18,6 +18,6 @@ class Area extends Model
      */
     final public function getAreaByDistrictId(int $district_id):Builder|Collection
     {
-        return self::query()->select('id as value', 'name as label')->where('district_id', $district_id)->get();
+        return self::query()->select('id', 'name')->where('district_id', $district_id)->get();
     }
 }
