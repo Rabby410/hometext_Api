@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Address;
 use App\Models\Supplier;
+use Illuminate\Support\Str;
+use App\Manager\ImageUploadManager;
 use App\Http\Requests\StoreSupplierRequest;
 use App\Http\Requests\UpdateSupplierRequest;
 
@@ -23,9 +25,27 @@ class SupplierController extends Controller
      */
     public function store(StoreSupplierRequest $request)
     {
-        $supplier = (new Supplier())->prepareData($request->except('logo'), auth());
-        $address = (new Address())->prepareData($request->except('logo'));
-        return [$supplier, $address];
+        $supplier = (new Supplier())->prepareData($request->all(), auth());
+        $address = (new Address())->prepareData($request->all());
+        if($request->has('logo')){
+            $name=Str::slug($supplier['name']);
+            $supplier['logo']=
+            ImageUploadManager::processImageUpload(
+                $request->has('logo'),
+                $name,
+                Supplier::IMAGE_UPLOAD_PATH,
+                Supplier::LOGO_WIDTH,
+                Supplier::LOGO_HEIGHT,
+                Supplier::THUMB_IMAGE_UPLOAD_PATH,
+                Supplier::LOGO_THUMB_WIDTH,
+                Supplier::LOGO_THUMB_HEIGHT,
+
+            );
+        }
+        $supplier = Supplier::create($supplier);
+        $supplier->address()->create($address);
+        return response()->json(['msg'=>'Category Added Successfully', 'cls' => 'success']);
+        // return $request->all();
     }
 
     /**
