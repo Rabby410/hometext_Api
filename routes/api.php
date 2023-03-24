@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AreaController;
+use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\SupplierController;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AuthController;
@@ -42,3 +43,4 @@ Route::apiResource('category', CategoryController::class);
 Route::apiResource('sub-category', SubCategoryController::class);
 Route::apiResource('brand', BrandController::class);
 Route::apiResource('supplier', SupplierController::class);
+Route::apiResource('attribute', AttributeController::class);
