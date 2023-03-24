@@ -27,7 +27,7 @@ class StoreSupplierRequest extends FormRequest
             'district_id'=> 'required|numeric',
             'division_id'=> 'required|numeric',
             'name'=> 'required|min:3|max:255',
-            'description'=> 'max:1000',
+            'details'=> 'max:1000',
             'email'=> 'required|email',
             'landmark'=> 'max:255',
             'logo'=> 'required',

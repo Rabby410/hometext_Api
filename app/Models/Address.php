@@ -25,8 +25,8 @@ class Address extends Model
     {
         $address['address'] = $input['address'] ?? '';
         $address['area_id'] = $input['area_id'] ?? '';
-        $address['division_id'] = $input['division_id'] ?? '';
         $address['district_id'] = $input['district_id'] ?? '';
+        $address['division_id'] = $input['division_id'] ?? '';
         $address['status'] = self::STATUS_ACTIVE;
         $address['type'] = self::SUPPLIER_ADDRESS;
         return $address;

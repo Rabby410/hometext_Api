@@ -28,10 +28,10 @@ class SupplierController extends Controller
         $supplier = (new Supplier())->prepareData($request->all(), auth());
         $address = (new Address())->prepareData($request->all());
         if($request->has('logo')){
-            $name=Str::slug($supplier['name']);
-            $supplier['logo']=
+            $name=Str::slug($supplier['name'].now());
+            $supplier['logo'] =
             ImageUploadManager::processImageUpload(
-                $request->has('logo'),
+                $request->input('logo'),
                 $name,
                 Supplier::IMAGE_UPLOAD_PATH,
                 Supplier::LOGO_WIDTH,
