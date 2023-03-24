@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('area_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->tinyInteger('status')->nullable();
             $table->tinyInteger('type')->nullable()->comment('1  = supplier 2 = customer present & 3 = customer permanent  , ');
-
+            $table->string('landmark')->nullable();
             $table->timestamps();
         });
     }

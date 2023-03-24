@@ -36,9 +36,9 @@ Route::get('area/{district_id}', [AreaController::class, 'index']);
 
 Route::group(['middleware' => 'auth:sanctum'], function () {
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
-    Route::apiResource('category', CategoryController::class);
-    Route::apiResource('sub-category', SubCategoryController::class);
-    Route::apiResource('brand', BrandController::class);
 });
+Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
+Route::apiResource('category', CategoryController::class);
+Route::apiResource('sub-category', SubCategoryController::class);
+Route::apiResource('brand', BrandController::class);
 Route::apiResource('supplier', SupplierController::class);
