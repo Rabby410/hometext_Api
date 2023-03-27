@@ -7,6 +7,7 @@ use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\ProductAttribute;
 use App\Models\ProductSpecification;
+use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
@@ -31,15 +32,25 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        return $request->all();
-        $product = (new Product())->prepareData($request->all(), auth()->id());
-        if($request->has('attributes')){
-            $product_attributes = (new ProductAttribute())->prepareAttributeData($request->input('attributes'));
+        try{
+            DB::beginTransaction();
+            $product = (new Product())->storeProduct($request->all(), auth()->id=1);
+            // $product =$product->storeProduct($product_data);
+            if($request->has('attributes')){
+                (new ProductAttribute())->storeAttribute ($request->input('attributes'), $product);
+            }
+            if($request->has('specifications')){
+                ( new ProductSpecification())-> storeProductSpecification ($request->input('specifications'), $product);
+            }
+
+            DB::commit();
+            return response()->json(['msg'=> 'Product Saved Successfully', 'cls'=>'success', 'product_id'=>$product->id]);
+
+        }catch(\Throwable $e){
+            info("PRODUCT_SAVE_FAILED", ['data'=>$request->all(), 'error'=>$e->getMessage()]);
+            DB::rollBack();
+            return response()->json(['msg'=> $e->getMessage(), 'cls'=>'warning']);
         }
-        if($request->has('specifications')){
-            $product_specifications = ( new ProductSpecification())-> ProductSpecificationData ($request->input('specifications'));
-        }
-        return $request->all();
     }
 
     /**
