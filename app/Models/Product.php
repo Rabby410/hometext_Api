@@ -9,9 +9,9 @@ class Product extends Model
 {
     use HasFactory;
 
-    public function storeProduct(array $input, int $auth_id)
+    public function storeProduct($product_data)
     {
-        return $this->prepareData($input, $auth_id);
+//        return $this->prepareData($input, $auth_id);
         // return self::create($product_data);
     }
     /**
@@ -19,7 +19,7 @@ class Product extends Model
      * @param int $auth_id
      * @return array
      */
-    private function prepareData(array $input, int $auth_id):array
+    final public function prepareData(array $input, int $auth_id):array
     {
         return [
             'brand_id' => $input['brand_id'] ?? '',

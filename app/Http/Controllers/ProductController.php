@@ -6,6 +6,7 @@ use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Models\ProductAttribute;
+use App\Models\ProductSpecification;
 
 class ProductController extends Controller
 {
@@ -30,8 +31,14 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        $product = (new Product())->storeProduct($request->all(), auth()->id());
-        $product_attributes = (new ProductAttribute())->storeProductAttribute($request->all(), $product);
+        return $request->all();
+        $product = (new Product())->prepareData($request->all(), auth()->id());
+        if($request->has('attributes')){
+            $product_attributes = (new ProductAttribute())->prepareAttributeData($request->input('attributes'));
+        }
+        if($request->has('specifications')){
+            $product_specifications = ( new ProductSpecification())-> ProductSpecificationData ($request->input('specifications'));
+        }
         return $request->all();
     }
 
