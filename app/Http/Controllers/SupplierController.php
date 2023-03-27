@@ -128,4 +128,12 @@ class SupplierController extends Controller
         $supplier->delete();
         return response()->json(['msg'=>'Supplier deleted Successfully', 'cls' => 'warning']);
     }
+     /**
+     * @return JsonResponse
+     */
+    final public function get_provider_list():JsonResponse
+        {
+            $providers = (new Supplier())->getProviderIdAndName();
+            return response()->json($providers);
+        }
 }

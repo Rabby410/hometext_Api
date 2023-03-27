@@ -105,4 +105,12 @@ class BrandController extends Controller
             ImageUploadManager::uploadImage($name, $width_thumb, $height_thumb, $path_thumb, $file);
             return $photo_name;
         }
+         /**
+         * @return JsonResponse
+         */
+        final public function get_brand_list():JsonResponse
+        {
+            $brands = (new Brand())->getBrandIdAndName();
+            return response()->json($brands);
+        }
 }

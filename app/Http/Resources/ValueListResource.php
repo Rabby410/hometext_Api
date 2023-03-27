@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class AttributeListResource extends JsonResource
+class ValueListResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,11 +18,10 @@ class AttributeListResource extends JsonResource
             'id'=>$this->id,
             'name'=>$this->name,
             'status'=>$this->status == 1 ? 'Active' : 'Inactive',
-            'original_status'=>$this->status,
-            'created_by'=>$this->user?->name ,
+            'status_original'=>$this->status,
             'created_at' => $this->created_at->toDayDateTimeString(),
             'updated_at' => $this->created_at != $this->updated_at ? $this->updated_at->toDayDateTimeString() : 'Not updated yet',
-            'value'=>ValueListResource::collection($this->value),
+            'created_by'=>$this->user?->name,
         ];
     }
 }

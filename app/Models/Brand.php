@@ -15,6 +15,8 @@ class Brand extends Model
     public const IMAGE_UPLOAD_PATH = 'images/uploads/brand/';
     public const THUMB_IMAGE_UPLOAD_PATH = 'images/uploads/brand_thumb/';
 
+    public const STATUS_ACTIVE = 1;
+
     protected $fillable = ['name','slug','serial','status','description','logo','user_id'];
     /**
      *@param array $input
@@ -52,6 +54,14 @@ class Brand extends Model
     final public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+     /**
+     * @return \Illuminate\Support\Collection
+     */
+    final public function getBrandIdAndName():Collection
+    {
+        return self::query()->select('id', 'name')->where('status', self::STATUS_ACTIVE)->get();
     }
 
 

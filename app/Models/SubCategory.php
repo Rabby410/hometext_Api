@@ -15,16 +15,7 @@ class SubCategory extends Model
     public const IMAGE_UPLOAD_PATH = 'images/uploads/sub_category/';
     public const THUMB_IMAGE_UPLOAD_PATH = 'images/uploads/sub_category_thumb/';
 
-    protected $fillable = [
-        'name',
-        'category_id',
-        'slug',
-        'serial',
-        'status',
-        'description',
-        'photo',
-        'user_id'
-    ];
+    protected $fillable = ['name','category_id','slug','serial','status','description','photo','user_id' ];
 
 
      /**
@@ -66,6 +57,15 @@ class SubCategory extends Model
     final public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+     /**
+      * @param int $category_id
+     * @return \Illuminate\Support\Collection
+     */
+    final public function getSubCategoryIdAndName(int $category_id):Collection
+    {
+        return self::query()->select('id', 'name')->where('category_id', $category_id)->get();
     }
 }
 

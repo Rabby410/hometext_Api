@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -12,6 +14,7 @@ class Supplier extends Model
     use HasFactory;
 
     protected $fillable = ['details', 'email', 'logo', 'name', 'phone', 'status', 'user_id'];
+
 
 
     public const STATUS_ACTIVE = 1;
@@ -78,5 +81,12 @@ class Supplier extends Model
     final public function user():BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+    /**
+     * @return Builder[]|Collection
+     */
+    final public function getProviderIdAndName():Builder|Collection
+    {
+        return self::query()->select('id', 'name', 'phone')->where('status', self::STATUS_ACTIVE)->orderBy('name', 'asc')->get();
     }
 }
