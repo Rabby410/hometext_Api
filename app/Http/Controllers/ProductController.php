@@ -5,27 +5,25 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
+use App\Http\Resources\ProductListResource;
 use App\Models\ProductAttribute;
 use App\Models\ProductSpecification;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    final public function index(Request $request): AnonymousResourceCollection
     {
-        //
+        $products =(new Product())->getProductList($request);
+        return ProductListResource::collection($products);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
 
     /**
      * Store a newly created resource in storage.

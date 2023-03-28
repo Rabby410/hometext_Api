@@ -7,6 +7,9 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Product extends Model
 {
@@ -33,6 +36,9 @@ class Product extends Model
             'stock',
     ];
 
+    public const STATUS_ACTIVE = 1;
+    public const STATUS_INACTIVE = 0;
+
     /**
      * @param array $input
      * @param int $auth_id
@@ -50,25 +56,25 @@ class Product extends Model
     private function prepareData(array $input, int $auth_id):array
     {
         return [
-            'brand_id' => $input['brand_id'] ?? '',
-            'category_id' => $input['category_id'] ?? '',
-            'country_id' => $input['country_id'] ?? '',
-            'sub_category_id' => $input['sub_category_id'] ?? '',
-            'supplier_id' => $input['supplier_id'] ?? '',
+            'brand_id' => $input['brand_id'] ?? 0,
+            'category_id' => $input['category_id'] ?? 0,
+            'country_id' => $input['country_id'] ?? 0,
+            'sub_category_id' => $input['sub_category_id'] ?? 0,
+            'supplier_id' => $input['supplier_id'] ?? 0,
             'created_by_id' => $auth_id,
             'updated_by_id' => $auth_id,
-            'cost' => $input['cost'] ?? '',
+            'cost' => $input['cost'] ?? 0,
             'description' => $input['description'] ?? '',
-            'discount_end' => $input['discount_end'] ?? '',
-            'discount_fixed' => $input['discount_fixed'] ?? '',
-            'discount_percent' => $input['discount_percent'] ?? '',
-            'discount_start' => $input['discount_start'] ?? '',
+            'discount_end' => $input['discount_end'] ?? null,
+            'discount_fixed' => $input['discount_fixed'] ?? 0,
+            'discount_percent' => $input['discount_percent'] ?? 0,
+            'discount_start' => $input['discount_start'] ?? null,
             'name' => $input['name'] ?? '',
-            'price' => $input['price'] ?? '',
+            'price' => $input['price'] ?? 0,
             'sku' => $input['sku'] ?? '',
             'slug' => $input['slug'] ? Str::slug($input['slug']) : '',
-            'status' => $input['status'] ?? '',
-            'stock' => $input['stock'] ?? '',
+            'status' => $input['status'] ?? 0,
+            'stock' => $input['stock'] ?? 0,
         ];
     }
     /**
@@ -78,5 +84,98 @@ class Product extends Model
     final public function getProductById(int $id):Builder|Collection|Model|null
     {
         return self::query()->findOrFail($id);
+    }
+
+    public function getProductList($input)
+    {
+        $per_page = $input['per_page'] ??10;
+
+        $query =self::query()->with([
+            'category:id,name',
+            'sub_category:id,name',
+            'brand:id,name',
+            'country:id,name',
+            'supplier:id,name,phone',
+            'created_by:id,name',
+            'updated_by:id,name',
+            'primary_photo',
+            'product_attributes',
+            'product_attributes.attributes',
+            'product_attributes.attribute_value',
+        ]);
+        if(!empty($input['search'])){
+            $query -> where('name', 'like', '%'.$input['search'].'%')
+            ->orWhere('phone', 'like', '%'.$input['search'].'%')
+            ->orWhere('email', 'like', '%'.$input['search'].'%');
+        }
+        if (!empty($input['order_by'])) {
+            $query->orderBy($input['order_by'], $input['direction'] ?? 'asc');
+        }
+        return $query->paginate($per_page);
+    }
+
+
+    /**
+     * @return BelongsTo
+     */
+    public function category():BelongsTo
+    {
+        return $this->belongsTo(Category::class);
+    }
+    /**
+     * @return BelongsTo
+     */
+    public function sub_category():BelongsTo
+    {
+        return $this->belongsTo(SubCategory::class, 'sub_category_id');
+    }
+    /**
+     * @return BelongsTo
+     */
+    public function brand():BelongsTo
+    {
+        return $this->belongsTo(Brand::class, 'brand_id');
+    }
+    /**
+     * @return BelongsTo
+     */
+    public function country():BelongsTo
+    {
+        return $this->belongsTo(Country::class, 'country_id');
+    }
+    /**
+     * @return BelongsTo
+     */
+    public function supplier():BelongsTo
+    {
+        return $this->belongsTo(Supplier::class, 'supplier_id');
+    }
+    /**
+     * @return BelongsTo
+     */
+    public function created_by():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'created_by_id');
+    }
+    /**
+     * @return BelongsTo
+     */
+    public function updated_by():BelongsTo
+    {
+        return $this->belongsTo(User::class, 'updated_by_id');
+    }
+    /**
+     * @return hasOne
+     */
+    public function primary_photo():hasOne
+    {
+        return $this->hasOne(ProductPhoto::class)->where('is_primary', 1);
+    }
+    /**
+     * @return HasMany
+     */
+    public function product_attributes():HasMany
+    {
+        return $this->hasMany(ProductAttribute::class);
     }
 }

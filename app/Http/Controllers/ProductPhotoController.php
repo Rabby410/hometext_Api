@@ -9,6 +9,7 @@ use App\Manager\ImageUploadManager;
 use App\Http\Requests\StoreProductPhotoRequest;
 use App\Http\Requests\UpdateProductPhotoRequest;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 
 class ProductPhotoController extends Controller
 {
@@ -29,9 +30,13 @@ class ProductPhotoController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * @param StoreProductPhotoRequest $request
+     * @param int $id
+     * @return JsonResponse
+     *
      */
-    public function store(StoreProductPhotoRequest $request, int $id)
+
+    final public function store(StoreProductPhotoRequest $request, int $id):JsonResponse
     {
         if ($request->has('photos')) {
             $product = (new Product())->getProductById($id);
