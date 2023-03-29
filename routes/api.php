@@ -12,6 +12,8 @@ use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPhotoController;
+use App\Http\Controllers\SalesManagerController;
+use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +45,7 @@ Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']
 Route::get('get-country-list', [CountryController::class, 'get_country_list']);
 Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
 Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
+Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
 Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
 Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
 Route::apiResource('category', CategoryController::class);
@@ -53,3 +56,5 @@ Route::apiResource('attribute', AttributeController::class);
 Route::apiResource('attribute-value', AttributeValueController::class);
 Route::apiResource('product', ProductController::class);
 Route::apiResource('photo', ProductPhotoController::class);
+Route::apiResource('shop', ShopController::class);
+Route::apiResource('sales-manager', SalesManagerController::class);

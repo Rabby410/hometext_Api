@@ -3,6 +3,7 @@
 namespace App\Http\Resources;
 
 use App\Manager\ImageUploadManager;
+use App\Manager\PriceManager;
 use App\Models\Product;
 use App\Models\ProductPhoto;
 use Carbon\Carbon;
@@ -21,14 +22,14 @@ class ProductListResource extends JsonResource
         return [
             'id'=>$this->id,
             'name'=>$this->name,
-            'slug'=>$this->sluge,
-            'cost'=>$this->cost,
-            'price'=>$this->price,
+            'slug'=>$this->slug,
+            'cost'=>$this->cost . PriceManager::CURRENCY_SYMBOL,
+            'price'=>$this->price . PriceManager::CURRENCY_SYMBOL,
             'sku'=>$this->sku,
             'stock'=>$this->stock,
             'status'=>$this->status == Product::STATUS_ACTIVE ? 'Active':'Inactive',
-            'discount_fixed'=>$this->discount_fixed,
-            'discount_percent'=>$this->discount_percent,
+            'discount_fixed'=>$this->discount_fixed . PriceManager::CURRENCY_SYMBOL,
+            'discount_percent'=>$this->discount_percent . '%',
             'description'=>$this->description,
             'created_at'=>$this->created_at->toDayDateTimeString(),
             'updated_at'=>$this->updated_at == $this->updated_at ? 'Not Updated' : $this->updated_at->toDayDateTimeString(),
@@ -44,7 +45,7 @@ class ProductListResource extends JsonResource
             'updated_by'=>$this->updated_by?->name,
             'primary_photo'=>ImageUploadManager::prepareImageUrl(ProductPhoto::THUMB_PHOTO_UPLOAD_PATH, $this->primary_photo?->photo),
 
-            'attributes'=>$this->product_attributes;
+            'attributes'=>ProductAttributeListResource::collection($this->product_attributes),
         ];
     }
 }
