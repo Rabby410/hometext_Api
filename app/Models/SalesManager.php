@@ -2,14 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphOne;
+use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
+use Laravel\Sanctum\HasApiTokens;
 
 class SalesManager extends Model
 {
-    use HasFactory;
+    use HasFactory, HasApiTokens, Notifiable;
 
     protected $fillable = ['bio', 'email', 'nid_photo','nid', 'password', 'photo', 'name', 'phone', 'status', 'user_id', 'shop_id'];
 
@@ -51,5 +55,51 @@ class SalesManager extends Model
     final public function address():MorphOne
     {
         return $this->morphOne(Address::class, 'addressable');
+    }
+
+    final public function getSalesManagerList($input)
+    {
+        $per_page = $input['per_page'] ??10;
+
+        $query =self::query()->with(
+            'address',
+            'address.division:id,name',
+            'address.district:id,name',
+            'address.area:id,name',
+            'user:id,name',
+            'shop:id,name',
+        );
+        if(!empty($input['search'])){
+            $query -> where('name', 'like', '%'.$input['search'].'%')
+            ->orWhere('phone', 'like', '%'.$input['search'].'%')
+            ->orWhere('email', 'like', '%'.$input['search'].'%');
+        }
+        if (!empty($input['order_by'])) {
+            $query->orderBy($input['order_by'], $input['direction'] ?? 'asc');
+        }
+        return $query->paginate($per_page);
+    }
+    /**
+     * @return BelongsTo
+     */
+    final public function user():BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+    /**
+     * @return BelongsTo
+     */
+    final public function shop():BelongsTo
+    {
+        return $this->belongsTo(Shop::class);
+    }
+    /**
+     * @param array $input
+     * @return Builder|Model|object|null
+    */
+
+    final public function getUserEmailOrPhone(array $input):Builder|Model|null
+    {
+        return self::query()->where('email', $input['email'])->orWhere('phone', $input['email'])->first();
     }
 }

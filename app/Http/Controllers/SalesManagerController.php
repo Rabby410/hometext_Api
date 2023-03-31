@@ -7,18 +7,23 @@ use Illuminate\Support\Str;
 use App\Models\SalesManager;
 use App\Http\Requests\StoreSalesManagerRequest;
 use App\Http\Requests\UpdateSalesManagerRequest;
+use App\Http\Resources\SalesManagerListResource;
 use App\Manager\ImageUploadManager;
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Throwable;
 
 class SalesManagerController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * @param Request $request
+     * @return AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request):AnonymousResourceCollection
     {
-        //
+        $sales_manager =(new SalesManager())->getSalesManagerList($request->all());
+        return SalesManagerListResource::collection($sales_manager);
     }
 
     /**
