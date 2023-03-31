@@ -39,7 +39,8 @@ Route::get('area/{district_id}', [AreaController::class, 'index']);
 
 Route::group(['middleware' => 'auth:sanctum', 'auth:users'], static function () {
     Route::post('logout', [AuthController::class, 'logout']);
-    Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
+});
+Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
 Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']);
 Route::get('get-country-list', [CountryController::class, 'get_country_list']);
 Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
@@ -56,10 +57,9 @@ Route::apiResource('attribute-value', AttributeValueController::class);
 Route::apiResource('product', ProductController::class);
 Route::apiResource('photo', ProductPhotoController::class);
 Route::apiResource('shop', ShopController::class);
-});
 
 
-Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function(){
-    Route::apiResource('sales-manager', SalesManagerController::class);
+// Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function(){
+//     Route::apiResource('sales-manager', SalesManagerController::class);
 
-});
+// });

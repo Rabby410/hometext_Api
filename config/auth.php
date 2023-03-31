@@ -41,11 +41,11 @@ return [
             'provider' => 'users',
         ],
         'admin' => [
-            'driver' => 'session',
+            'driver' => 'sanctum',
             'provider' => 'users',
         ],
         'sales_manager' => [
-            'driver' => 'session',
+            'driver' => 'sanctum',
             'provider' => 'sales_manager',
         ],
     ],
@@ -105,6 +105,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'sales_manager' => [
+            'provider' => 'sales_manager',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,
