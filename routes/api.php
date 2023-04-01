@@ -8,6 +8,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CountryController;
+use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DivisionController;
 use App\Http\Controllers\ProductController;
@@ -57,6 +58,7 @@ Route::apiResource('attribute-value', AttributeValueController::class);
 Route::apiResource('product', ProductController::class);
 Route::apiResource('photo', ProductPhotoController::class);
 Route::apiResource('shop', ShopController::class);
+Route::apiResource('customer', CustomerController::class);
 
 
 // Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function(){

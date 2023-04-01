@@ -94,4 +94,12 @@ class Shop extends Model
     {
         return self::query()->select(['id', 'name'])->where('status', 1)->get();
     }
+
+    public function getShopDetailsById($id)
+    {
+        return self::query()->with('address',
+        'address.division:id,name',
+        'address.district:id,name',
+        'address.area:id,name')->findOrFail($id);
+    }
 }
