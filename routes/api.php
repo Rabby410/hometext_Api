@@ -11,6 +11,8 @@ use App\Http\Controllers\CountryController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\DistrictController;
 use App\Http\Controllers\DivisionController;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProductPhotoController;
 use App\Http\Controllers\SalesManagerController;
@@ -59,9 +61,17 @@ Route::apiResource('product', ProductController::class);
 Route::apiResource('photo', ProductPhotoController::class);
 Route::apiResource('shop', ShopController::class);
 Route::apiResource('customer', CustomerController::class);
+Route::apiResource('order', OrderController::class);
+Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 
 
 // Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function(){
-//     Route::apiResource('sales-manager', SalesManagerController::class);
+    // Route::apiResource('sales-manager', SalesManagerController::class);
+    // Route::apiResource('product', ProductController::class);
+    // Route::apiResource('photo', ProductPhotoController::class);
+    // Route::apiResource('shop', ShopController::class);
+    // Route::apiResource('customer', CustomerController::class);
+    // Route::apiResource('order', OrderController::class);
+    // Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 
 // });
