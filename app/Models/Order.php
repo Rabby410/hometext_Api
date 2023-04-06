@@ -42,7 +42,7 @@ class Order extends Model
 
            $order_data = [
                'customer_id' =>$input['orderSummary']['customer_id'],
-               'sales_manager_id'=> $auth->id,
+               'sales_manager_id'=> $auth->id(),
                'shop_id' => $auth->shop_id,
                'sub_total' => $price['sub_total'],
                'discount' => $price['discount'],

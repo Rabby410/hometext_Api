@@ -27,7 +27,7 @@ class ShopListResource extends JsonResource
             'logo'=>ImageUploadManager::prepareImageUrl(Shop::THUMB_IMAGE_UPLOAD_PATH, $this->logo),
             'logo_full'=>ImageUploadManager::prepareImageUrl(Shop::IMAGE_UPLOAD_PATH, $this->logo),
             'created_at' => $this->created_at->toDayDateTimeString(),
-            'updated_at' => $this->created_at != $this->updated_at ? $this->updated_at->toDayDateTimeString() : 'Not updated yet',
+            // 'updated_at' => $this->created_at != $this->updated_at ? $this->updated_at->toDayDateTimeString() : 'Not updated yet',
             'address' => new AddressListResource($this->address),
             ];
     }

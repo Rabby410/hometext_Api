@@ -102,4 +102,5 @@ class SalesManager extends Model
     {
         return self::query()->where('email', $input['email'])->orWhere('phone', $input['email'])->first();
     }
+
 }

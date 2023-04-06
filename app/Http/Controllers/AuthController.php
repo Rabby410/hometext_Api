@@ -11,6 +11,7 @@ use App\Models\Shop;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
+use Mockery\Undefined;
 
 class AuthController extends Controller
 {
@@ -31,7 +32,7 @@ class AuthController extends Controller
             $role = self::SALES_MANAGER;
         }
         if($user && Hash::check($request->input('password'), $user->password)){
-            $branch = null;
+            $branch =  null;
             if($role == self::SALES_MANAGER){
                 $branch = (new Shop())->getShopDetailsById($user->shop_id);
             }
@@ -41,7 +42,7 @@ class AuthController extends Controller
             $user_data['photo'] = $user->photo;
             $user_data['email'] = $user->email;
             $user_data['role'] = $role;
-            $user_data['branch'] = new ShopListResource($branch);
+            // $user_data['branch'] = new ShopListResource($branch);
             return response()->json($user_data);
         }
         throw ValidationException::withMessages([

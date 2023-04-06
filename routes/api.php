@@ -35,43 +35,60 @@ use Illuminate\Support\Facades\Route;
 
 // Route::get('test', [scriptManager::class, 'getCountry']);
 Route::post('login', [AuthController::class, 'login']);
+Route::get('products-web', [ProductController::class, 'index']);
+Route::get('products-web/{product_id}', [ProductController::class, 'index']);
 Route::get('divisions', [DivisionController::class, 'index']);
 Route::get('district/{division_id}', [DistrictController::class, 'index']);
 Route::get('area/{district_id}', [AreaController::class, 'index']);
 
 
-Route::group(['middleware' => 'auth:sanctum', 'auth:users'], static function () {
+Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
+    Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']);
+    Route::get('get-country-list', [CountryController::class, 'get_country_list']);
+    Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
+    Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
+    Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
+    Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
+    Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
+    Route::apiResource('category', CategoryController::class);
+    Route::apiResource('sub-category', SubCategoryController::class);
+    Route::apiResource('brand', BrandController::class);
+    Route::apiResource('supplier', SupplierController::class);
+    Route::apiResource('attribute', AttributeController::class);
+    Route::apiResource('attribute-value', AttributeValueController::class);
+    Route::apiResource('product', ProductController::class);
+    Route::apiResource('photo', ProductPhotoController::class);
+    Route::apiResource('shop', ShopController::class);
+    Route::apiResource('customer', CustomerController::class);
+    Route::apiResource('order', OrderController::class);
+    Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 });
-Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
-Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']);
-Route::get('get-country-list', [CountryController::class, 'get_country_list']);
-Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
-Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
-Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
-Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
-Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
-Route::apiResource('category', CategoryController::class);
-Route::apiResource('sub-category', SubCategoryController::class);
-Route::apiResource('brand', BrandController::class);
-Route::apiResource('supplier', SupplierController::class);
-Route::apiResource('attribute', AttributeController::class);
-Route::apiResource('attribute-value', AttributeValueController::class);
-Route::apiResource('product', ProductController::class);
-Route::apiResource('photo', ProductPhotoController::class);
-Route::apiResource('shop', ShopController::class);
-Route::apiResource('customer', CustomerController::class);
-Route::apiResource('order', OrderController::class);
-Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 
 
-// Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function(){
-    // Route::apiResource('sales-manager', SalesManagerController::class);
-    // Route::apiResource('product', ProductController::class);
-    // Route::apiResource('photo', ProductPhotoController::class);
-    // Route::apiResource('shop', ShopController::class);
-    // Route::apiResource('customer', CustomerController::class);
-    // Route::apiResource('order', OrderController::class);
-    // Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
+Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function () {
+    Route::post('logout', [AuthController::class, 'logout']);
+    Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
+    Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']);
+    Route::get('get-country-list', [CountryController::class, 'get_country_list']);
+    Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
+    Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
+    Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
+    Route::apiResource('sales-manager', SalesManagerController::class);
+    Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
+    Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
+    Route::apiResource('category', CategoryController::class);
+    Route::apiResource('sub-category', SubCategoryController::class);
+    Route::apiResource('brand', BrandController::class);
+    Route::apiResource('supplier', SupplierController::class);
+    Route::apiResource('attribute', AttributeController::class);
+    Route::apiResource('attribute-value', AttributeValueController::class);
+    Route::apiResource('product', ProductController::class);
+    Route::apiResource('photo', ProductPhotoController::class);
+    Route::apiResource('shop', ShopController::class);
+    Route::apiResource('customer', CustomerController::class);
+    Route::apiResource('order', OrderController::class);
+    Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 
-// });
+});
