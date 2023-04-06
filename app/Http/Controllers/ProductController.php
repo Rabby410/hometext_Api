@@ -26,6 +26,16 @@ class ProductController extends Controller
 
 
     /**
+     *product details for web 
+     */
+
+    final public function productsdetails($id){
+       $products = Product::find($id);
+       return response()->json($products);
+    }
+
+
+    /**
      * Store a newly created resource in storage.
      */
     public function store(StoreProductRequest $request)

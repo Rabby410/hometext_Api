@@ -37,6 +37,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('login', [AuthController::class, 'login']);
 Route::get('products-web', [ProductController::class, 'index']);
 Route::get('products-web/{product_id}', [ProductController::class, 'index']);
+Route::get('products-details-web/{id}', [ProductController::class, 'productsdetails']);
+
 Route::get('divisions', [DivisionController::class, 'index']);
 Route::get('district/{division_id}', [DistrictController::class, 'index']);
 Route::get('area/{district_id}', [AreaController::class, 'index']);
