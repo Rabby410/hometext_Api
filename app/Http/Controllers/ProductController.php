@@ -30,8 +30,20 @@ class ProductController extends Controller
      */
 
     final public function productsdetails($id){
-       $products = Product::find($id);
-       return response()->json($products);
+       $products =Product::query()->with([
+            'category:id,name',
+            'sub_category:id,name',
+            'brand:id,name',
+            'country:id,name',
+            'supplier:id,name,phone',
+            'created_by:id,name',
+            'updated_by:id,name',
+            'primary_photo',
+            'product_attributes',
+            'product_attributes.attributes',
+            'product_attributes.attribute_value',
+        ])->where('id', '=', $id)->first();       
+        return response()->json($products);
     }
 
 

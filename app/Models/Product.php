@@ -90,6 +90,8 @@ class Product extends Model
     {
         $per_page = $input['per_page'] ??10;
 
+// print_r($input);
+// die();
         $query =self::query()->with([
             'category:id,name',
             'sub_category:id,name',
