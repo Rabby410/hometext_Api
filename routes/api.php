@@ -18,6 +18,7 @@ use App\Http\Controllers\ProductPhotoController;
 use App\Http\Controllers\SalesManagerController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\web_api\CheckOutController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -91,6 +92,11 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::apiResource('shop', ShopController::class);
     Route::apiResource('customer', CustomerController::class);
     Route::apiResource('order', OrderController::class);
-    Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
+    Route::get('get-payment-methods', [PaymentMethodController::class, 'checkout']);
 
 });
+
+
+
+// for check out 
+Route::post('check-out', [CheckOutController::class, 'checkout']);
