@@ -7,8 +7,10 @@ use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+ 
 
 class CheckOutController extends Controller
 {
@@ -16,6 +18,13 @@ class CheckOutController extends Controller
     const REGISTER_USER = 1;
     const GUEST_USER = 2;
     const RETURN_USER = 3;
+
+    // public function __construct()
+    // {
+    //     $this->middleware('auth:api', ['except' => ['checkout']]);
+    // }
+
+
     /**
      * @param int $division_id
      * @return JsonResponse
@@ -38,6 +47,7 @@ class CheckOutController extends Controller
         //     "billing_company":"", 
         //     "billing_address_1":"", 
         //     "billing_address_2":"", 
+        //     "billing_city":"",
         //     "billing_post_code":"", 
         //     "billing_country":"", 
         //     "billing_district":"", 
@@ -54,7 +64,10 @@ class CheckOutController extends Controller
         //     "coupon_code":"", 
         //     "voucher_code":"", 
         //     "product_details": "" 
+        //     "cartData": "[{\"product_id\":1,\"name\":\"Ash Box\",\"price\":4450,\"image\":\"\",\"in_stock\":91,\"supplier_id\":3,\"quantity\":1,\"sku\":\"h457893652\",\"total_price\":4450},{\"product_id\":6,\"name\":\"Trex\",\"price\":2050,\"image\":\"\",\"in_stock\":100,\"supplier_id\":3,\"quantity\":1,\"sku\":\"IKBS 1013\",\"total_price\":2050},{\"product_id\":2,\"name\":\"Shahadath\",\"price\":200,\"image\":\"\",\"in_stock\":0,\"supplier_id\":0,\"quantity\":1,\"sku\":\"aa2223233\",\"total_price\":200}]"
         // }
+
+
 
 
 
@@ -90,6 +103,8 @@ class CheckOutController extends Controller
             return response()->json(['error' => $validator->errors()], 401);
         }
 
+        // return response()->json(['success' => json_decode($request->cartData)], 200);
+
         // check user already exist or not
         if ($request->user_type == self::REGISTER_USER) {
             $check_is_user_exist = User::where('email', '=', $request->username)->count();
@@ -109,8 +124,26 @@ class CheckOutController extends Controller
             $user->save();
 
 
+            // $token = Auth::loginUsingId($user->id);
+
+            // if (! $token = auth()->attempt($validator->validated())) {
+            //     return response()->json(['error' => 'Unauthorized'], 401);
+            // }
+            // return $this->createNewToken($token);
+
+            // $user = User::create([
+            //     'name' => $request->name,
+            //     'email' => $request->email,
+            //     'password' => Hash::make($request->password),
+            // ]);
+    
+            $token = Auth::login($user);
+
+
+
             $success['name'] = $user->name;
             $success['user_id'] = $user->id;
+            $success['tiken'] = $token;
             return response()->json(['success' => $success], 200);
 
         } catch (Exception $e) {
@@ -122,5 +155,15 @@ class CheckOutController extends Controller
         //JsonResponse
         // $areas = (new Area())->getAreaByDistrictId($district_id);
         // return response()->json($areas);
+    }
+
+
+    protected function createNewToken($token){
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user()
+        ]);
     }
 }
