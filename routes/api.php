@@ -99,4 +99,10 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
 
 
 // for check out 
+
+Route::middleware(['auth:api'])->post('/admin', function () {
+    // Route logic here
+});
+
 Route::post('check-out', [CheckOutController::class, 'checkout']);
+Route::get('my-order', [CheckOutController::class, 'myorder']);
