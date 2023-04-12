@@ -17,7 +17,7 @@ class AttributeValueController extends Controller
     final public function store(StoreAttributeValueRequest $request): JsonResponse
     {
         $value_data = $request->all();
-        $value_data['user_id']=auth()->id();
+//        $value_data['user_id']=auth()->id();
         AttributeValue::create($value_data);
         return response()->json(['msg'=>'Attribute Value Created Successfully', 'cls' => 'success']);
     }

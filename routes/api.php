@@ -18,8 +18,8 @@ use App\Http\Controllers\ProductPhotoController;
 use App\Http\Controllers\SalesManagerController;
 use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubCategoryController;
-use App\Http\Controllers\web_api\CheckOutController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\web_api\CheckOutController;
 
 /*
 |--------------------------------------------------------------------------
@@ -53,6 +53,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
     Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
     Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
+    Route::get('get-product-list-for-bar-code', [ProductController::class, 'get_product_list_for_bar_code']);
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::apiResource('category', CategoryController::class);
@@ -71,14 +72,37 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
 
 
 Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function () {
+//    Route::post('logout', [AuthController::class, 'logout']);
+//    Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
+//    Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']);
+//    Route::get('get-country-list', [CountryController::class, 'get_country_list']);
+//    Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
+//    Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
+//    Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
+//    Route::apiResource('sales-manager', SalesManagerController::class);
+//    Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
+//    Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
+//    Route::apiResource('category', CategoryController::class);
+//    Route::apiResource('sub-category', SubCategoryController::class);
+//    Route::apiResource('brand', BrandController::class);
+//    Route::apiResource('supplier', SupplierController::class);
+//    Route::apiResource('attribute', AttributeController::class);
+//    Route::apiResource('attribute-value', AttributeValueController::class);
+//    Route::apiResource('product', ProductController::class);
+//    Route::apiResource('photo', ProductPhotoController::class);
+//    Route::apiResource('shop', ShopController::class);
+//    Route::apiResource('customer', CustomerController::class);
+//    Route::apiResource('order', OrderController::class);
+//    Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::apiResource('sales-manager', SalesManagerController::class);
     Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
     Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']);
     Route::get('get-country-list', [CountryController::class, 'get_country_list']);
     Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
     Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
     Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
-    Route::apiResource('sales-manager', SalesManagerController::class);
+    Route::get('get-product-list-for-bar-code', [ProductController::class, 'get_product_list_for_bar_code']);
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::apiResource('category', CategoryController::class);
@@ -92,13 +116,12 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::apiResource('shop', ShopController::class);
     Route::apiResource('customer', CustomerController::class);
     Route::apiResource('order', OrderController::class);
-    Route::get('get-payment-methods', [PaymentMethodController::class, 'checkout']);
+    Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 
 });
 
 
-
-// for check out 
+// for check out
 
 Route::middleware(['auth:api'])->post('/admin', function () {
     // Route logic here

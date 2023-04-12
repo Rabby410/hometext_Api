@@ -10,9 +10,9 @@ class PriceManager{
     public static function calculate_sell_price(
         int $price,
         int $discount_percent,
-        int $discount_fixed,
-        string|null $discount_start = '',
-        string|null $discount_end = ''
+        ?int $discount_fixed = null,
+        ?string $discount_start = null,
+        ?string $discount_end = null
         )
         {
 

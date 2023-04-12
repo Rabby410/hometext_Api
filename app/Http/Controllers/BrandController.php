@@ -35,7 +35,7 @@ class BrandController extends Controller
     {
         $brand = $request->except('logo');
         $brand['slug'] = Str::slug($request->input('slug'));
-        $brand['user_id'] = auth()->id();
+//        $brand['user_id'] = auth()->id();
         if($request->has('logo')){
             $brand['logo'] = $this->processImageUpload($request->input('logo'), $brand['slug']);
         }

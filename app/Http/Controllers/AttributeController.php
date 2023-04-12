@@ -27,7 +27,7 @@ class AttributeController extends Controller
     final public function store(StoreAttributeRequest $request):JsonResponse
     {
         $attribute_data = $request->all();
-        $attribute_data['user_id']=auth()->id();
+//        $attribute_data['user_id']=auth()->id();
         Attribute::create($attribute_data);
         return response()->json(['msg'=>'Attribute Created Successfully', 'cls' => 'success']);
     }

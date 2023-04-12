@@ -14,6 +14,9 @@ use Laravel\Sanctum\HasApiTokens;
 class SalesManager extends Model
 {
     use HasFactory, HasApiTokens, Notifiable;
+    protected  $hidden = [
+        'password',
+    ];
 
     protected $fillable = ['bio', 'email', 'nid_photo','nid', 'password', 'photo', 'name', 'phone', 'status', 'user_id', 'shop_id'];
 
@@ -103,4 +106,9 @@ class SalesManager extends Model
         return self::query()->where('email', $input['email'])->orWhere('phone', $input['email'])->first();
     }
 
+
+    final public function transactionable():MorphOne
+    {
+        return $this->morphOne(Transaction::class, 'transactionable');
+    }
 }

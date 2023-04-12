@@ -90,8 +90,6 @@ class Product extends Model
     {
         $per_page = $input['per_page'] ??10;
 
-// print_r($input);
-// die();
         $query =self::query()->with([
             'category:id,name',
             'sub_category:id,name',
@@ -178,5 +176,22 @@ class Product extends Model
     public function product_attributes():HasMany
     {
         return $this->hasMany(ProductAttribute::class);
+    }
+
+    public function getProductForBarCode($input)
+    {
+        $query = self::query()->select('id', 'name', 'sku', 'price', 'discount_end', 'discount_percent', 'discount_start');
+        if (!empty($input['name'])){
+            $query->where('name', 'like', '%'.$input['name']."%");
+        }
+
+        if (!empty($input['category_id'])) {
+            $query->where('category_id', $input['category_id']);
+        }
+
+        if (!empty($input['sub_category_id'])) {
+            $query->where('sub_category_id', $input['sub_category_id']);
+        }
+        return $query->get();
     }
 }

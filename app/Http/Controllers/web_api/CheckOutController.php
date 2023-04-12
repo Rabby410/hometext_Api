@@ -13,7 +13,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
- 
+
 
 class CheckOutController extends Controller
 {
@@ -35,38 +35,37 @@ class CheckOutController extends Controller
     final public function checkout(Request $request)
     {
 
-
         // http://127.0.0.1:8000/api/check-out
 
         // {
         //     "user_type": "1",
         //     "pd_first_name":"F_Name",
         //     "pd_last_name":"L_Name",
-        //     "pd_email":"admin@admin.com", 
-        //     "pd_phone":"", 
-        //     "pd_fax":"", 
-        //     "username":"admin@hometexbd.ltd2", 
-        //     "password":"123", 
-        //     "billing_company":"", 
-        //     "billing_address_1":"", 
-        //     "billing_address_2":"", 
+        //     "pd_email":"admin@admin.com",
+        //     "pd_phone":"",
+        //     "pd_fax":"",
+        //     "username":"admin@hometexbd.ltd2",
+        //     "password":"123",
+        //     "billing_company":"",
+        //     "billing_address_1":"",
+        //     "billing_address_2":"",
         //     "billing_city":"",
-        //     "billing_post_code":"", 
-        //     "billing_country":"", 
-        //     "billing_district":"", 
-        //     "shipping_frist_name":"", 
-        //     "shipping_last_name":"", 
-        //     "shipping_company":"", 
-        //     "shipping_address_1":"", 
-        //     "shipping_address_2":"", 
-        //     "shipping_post_code":"", 
-        //     "shipping_country":"", 
-        //     "shipping_district":"", 
-        //     "payment_method":"", 
-        //     "shipping_method":"", 
-        //     "coupon_code":"", 
-        //     "voucher_code":"", 
-        //     "product_details": "" 
+        //     "billing_post_code":"",
+        //     "billing_country":"",
+        //     "billing_district":"",
+        //     "shipping_frist_name":"",
+        //     "shipping_last_name":"",
+        //     "shipping_company":"",
+        //     "shipping_address_1":"",
+        //     "shipping_address_2":"",
+        //     "shipping_post_code":"",
+        //     "shipping_country":"",
+        //     "shipping_district":"",
+        //     "payment_method":"",
+        //     "shipping_method":"",
+        //     "coupon_code":"",
+        //     "voucher_code":"",
+        //     "product_details": ""
         //     "cartData": "[{\"product_id\":1,\"name\":\"Ash Box\",\"price\":4450,\"image\":\"\",\"in_stock\":91,\"supplier_id\":3,\"quantity\":1,\"sku\":\"h457893652\",\"total_price\":4450},{\"product_id\":6,\"name\":\"Trex\",\"price\":2050,\"image\":\"\",\"in_stock\":100,\"supplier_id\":3,\"quantity\":1,\"sku\":\"IKBS 1013\",\"total_price\":2050},{\"product_id\":2,\"name\":\"Shahadath\",\"price\":200,\"image\":\"\",\"in_stock\":0,\"supplier_id\":0,\"quantity\":1,\"sku\":\"aa2223233\",\"total_price\":200}]"
         // }
 
@@ -91,22 +90,22 @@ class CheckOutController extends Controller
                 // 'billing_district' => 'required',
             ];
         }
-        if ($request->user_type == self::REGISTER_USER) {           
+        if ($request->user_type == self::REGISTER_USER) {
 
             $fields['password'] = 'required';
-            $fields['username'] = 'required'; 
+            $fields['username'] = 'required';
 
         } else if ($request->user_type == self::GUEST_USER) {
         }
 
 
-         
-         
+
+
         $validator = Validator::make($request->all(), $fields);
 
         if ($validator->fails()) {
             return response()->json(['status'=>400,'message'=>'validation_err','error' => $validator->errors()], 400);
-        }       
+        }
 
         // return response()->json(['success' => json_decode($request->cartData)], 200);
 
@@ -126,17 +125,17 @@ class CheckOutController extends Controller
             $user->name =  $request->pd_first_name;
             $user->phone =  $request->pd_phone;
             $user->shop_id = 3;
-            $user->save();            
+            $user->save();
 
             $token = Auth::attempt(['email' => $request->username, 'password' => $request->password]);
 
             if($token){
-                $customer = new Customer();                
+                $customer = new Customer();
                 $customer->email =  $request->username;
                 $customer->name =  $request->pd_first_name;
-                $customer->phone =  $request->pd_phone;                
-                $customer->save(); 
-                
+                $customer->phone =  $request->pd_phone;
+                $customer->save();
+
                 //customer id
                 $customer_id = $customer->id;
                 $new_order = new Order();
@@ -163,7 +162,7 @@ class CheckOutController extends Controller
                 }
             }
             $success['name'] = $user->name;
-            
+
             $success['authorisation'] = [
                 'token' => $token,
                 'type' => 'bearer',
@@ -197,13 +196,13 @@ class CheckOutController extends Controller
                 'user' =>[],
             ], 200);
 
-            
+
 
         }
 
-           
-        
-       
+
+
+
     }
 
     // protected function createNewToken($token){

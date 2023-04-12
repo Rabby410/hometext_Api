@@ -29,10 +29,10 @@ class SalesManagerListResource extends JsonResource
             'photo_full'=>ImageUploadManager::prepareImageUrl(SalesManager::PHOTO_UPLOAD_PATH, $this->photo),
             'nid_photo'=>ImageUploadManager::prepareImageUrl(SalesManager::THUMB_PHOTO_UPLOAD_PATH, $this->nid_photo),
             'nid_photo_full'=>ImageUploadManager::prepareImageUrl(SalesManager::PHOTO_UPLOAD_PATH, $this->nid_photo),
-            'created_at' => $this->created_at->toDayDateTimeString(),
-            'updated_at' => $this->created_at != $this->updated_at ? $this->updated_at->toDayDateTimeString() : 'Not updated yet',
+            'created_at' => $this->created_at ? $this->created_at->toDayDateTimeString(): '',
+            'updated_at' => $this->updated_at ? $this->updated_at ? $this->updated_at->toDayDateTimeString() : 'Not updated yet': null,
             'address' => new AddressListResource($this->address),
             'shop' => $this->shop?->name,
-            ];;
+            ];
     }
 }

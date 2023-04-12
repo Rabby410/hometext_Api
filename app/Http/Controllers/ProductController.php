@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductListForBarCodeResource;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -26,7 +27,7 @@ class ProductController extends Controller
 
 
     /**
-     *product details for web 
+     *product details for web
      */
 
     final public function productsdetails($id){
@@ -42,7 +43,7 @@ class ProductController extends Controller
             'product_attributes',
             'product_attributes.attributes',
             'product_attributes.attribute_value',
-        ])->where('id', '=', $id)->first();       
+        ])->where('id', '=', $id)->first();
         return response()->json($products);
     }
 
@@ -103,5 +104,11 @@ class ProductController extends Controller
     public function destroy(Product $product)
     {
         //
+    }
+
+    public function get_product_list_for_bar_code(Request $request)
+    {
+        $produrcts = (new Product())->getProductForBarCode($request->all());
+        return ProductListForBarCodeResource::collection($produrcts);
     }
 }

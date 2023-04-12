@@ -51,7 +51,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @param array $input
      * @return Builder|Model|object|null
-    */
+     */
 
     final public function getUserEmailOrPhone(array $input):Builder|Model|null
     {

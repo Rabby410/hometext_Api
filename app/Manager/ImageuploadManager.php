@@ -41,7 +41,7 @@ class ImageUploadManager
     /**
      *@param String $path
      *@param String|null $image
-     *@return \Illuminate\Contracts\Foundation\Application|\Illuminate\Contracts\Routing\UrlGenerator|string
+     *@return Application|\Illuminate\Contracts\Routing\UrlGenerator|string
      */
 
     final public static function prepareImageUrl(string $path, string|null $image):string

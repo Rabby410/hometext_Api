@@ -20,6 +20,7 @@ return new class extends Migration
             $table->integer('discount_fixed')->nullable();
             $table->integer('discount_percent')->nullable();
             $table->integer('price')->nullable();
+            $table->integer('sale_price')->nullable();
             $table->integer('quantity')->nullable();
             $table->timestamp('discount_start')->nullable();
             $table->timestamp('discount_end')->nullable();

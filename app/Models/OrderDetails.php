@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Manager\PriceManager;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -19,25 +20,47 @@ class OrderDetails extends Model
         }
     }
 
-    public function prepareData($input, $order)
+    public function prepareData($product, $order)
     {
         return [
 
             'order_id' => $order->id,
-            'name' => $order->name,
-            'brand_id' => $order->brand_id,
-            'category_id' => $order->category_id,
-            'cost' => $order->cost,
-            'discount_end' => $order->discount_end,
-            'discount_fixed' => $order->discount_fixed,
-            'discount_percent' => $order->discount_percent,
-            'discount_start' => $order->discount_start,
-            'price' => $order->price,
-            'sku' => $order->sku,
-            'sub_category_id' => $order->sub_category_id,
-            'supplier_id' => $order->supplier_id,
-            'quantity' => $order->quantity,
-            'photo' => $order->primary_photo?->photo,
+            'name' => $product->name,
+            'brand_id' => $product->brand_id,
+            'category_id' => $product->category_id,
+            'cost' => $product->cost,
+            'discount_end' => $product->discount_end,
+            'discount_fixed' => $product->discount_fixed,
+            'discount_percent' => $product->discount_percent,
+            'discount_start' => $product->discount_start,
+            'price' => $product->price,
+            'sale_price'=>PriceManager::calculate_sell_price($product->price, $product->discount_percent, $product->discount_fixed, $product->discount_start, $product->discount_end )['price'],
+            'sku' => $product->sku,
+            'sub_category_id' => $product->sub_category_id,
+            'supplier_id' => $product->supplier_id,
+            'quantity' => $product->quantity,
+            'photo' => $product->primary_photo?->photo,
         ];
     }
+
+    public function brand()
+    {
+        return $this->belongsTo(Brand::class);
+    }
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function sub_category()
+    {
+        return $this->belongsTo(SubCategory::class);
+    }
+
+    public function supplier()
+    {
+        return $this->belongsTo(Supplier::class);
+    }
+
 }
