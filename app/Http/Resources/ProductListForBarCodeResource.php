@@ -18,6 +18,7 @@ class ProductListForBarCodeResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
+            'brand'=>$this->brand?->name,
             'price' => number_format($this->price) . PriceManager::CURRENCY_SYMBOL,
             'sell_price' => PriceManager::calculate_sell_price($this->price, $this->discount_percent, $this->discount_fixed, $this->discount_start, $this->discount_end),
             'sku' => $this->sku,

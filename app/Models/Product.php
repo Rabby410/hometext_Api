@@ -180,7 +180,7 @@ class Product extends Model
 
     public function getProductForBarCode($input)
     {
-        $query = self::query()->select('id', 'name', 'sku', 'price', 'discount_end', 'discount_percent', 'discount_start');
+        $query = self::query()->select('id', 'name', 'brand_id', 'sku', 'price', 'discount_end', 'discount_percent', 'discount_start');
         if (!empty($input['name'])){
             $query->where('name', 'like', '%'.$input['name']."%");
         }
