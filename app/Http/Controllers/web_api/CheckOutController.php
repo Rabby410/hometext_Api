@@ -99,14 +99,11 @@ class CheckOutController extends Controller
         }
 
 
-
-
         $validator = Validator::make($request->all(), $fields);
 
         if ($validator->fails()) {
             return response()->json(['status'=>400,'message'=>'validation_err','error' => $validator->errors()], 400);
         }
-
         // return response()->json(['success' => json_decode($request->cartData)], 200);
 
         // check user already exist or not
@@ -167,6 +164,9 @@ class CheckOutController extends Controller
                 'token' => $token,
                 'type' => 'bearer',
             ];
+
+            $success['return_payment_page']='yes';
+            $success['order_id']=$new_order->id;
 
 
             return response()->json(['status'=>200,'message'=>'success','success' => $success], 200);
