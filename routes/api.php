@@ -20,6 +20,8 @@ use App\Http\Controllers\ShopController;
 use App\Http\Controllers\SubCategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\web_api\CheckOutController;
+use App\Http\Controllers\web_api\EcomUserController;
+use App\Http\Controllers\web_api\OrderDetailsController;
 use App\Http\Controllers\web_api\PaymentController;
 
 /*
@@ -129,5 +131,10 @@ Route::middleware(['auth:api'])->post('/admin', function () {
 });
 
 Route::post('check-out', [CheckOutController::class, 'checkout']);
-Route::get('my-order', [CheckOutController::class, 'myorder']);
+// Route::get('my-order', [CheckOutController::class, 'myorder']);
 Route::get('get-payment-details', [PaymentController::class, 'getpaymentdetails']);
+// order details 
+Route::get('my-order', [OrderDetailsController::class, 'myorder']);
+// user 
+Route::post('user-signup',[EcomUserController::class,'signup']);
+// Route::post('user-signout',[EcomUserController::class,'signout']);

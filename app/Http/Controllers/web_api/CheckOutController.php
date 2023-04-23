@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Models\Order;
 use App\Models\OrderDetails;
+use App\Models\Transaction;
 use App\Models\User;
 use Exception;
 use Illuminate\Http\JsonResponse;
@@ -121,7 +122,8 @@ class CheckOutController extends Controller
             $user->email =  $request->username;
             $user->name =  $request->pd_first_name;
             $user->phone =  $request->pd_phone;
-            $user->shop_id = 3;
+            $user->shop_id = 4;
+            $user->salt = rand(1111,9999);
             $user->save();
 
             $token = Auth::attempt(['email' => $request->username, 'password' => $request->password]);
@@ -131,16 +133,20 @@ class CheckOutController extends Controller
                 $customer->email =  $request->username;
                 $customer->name =  $request->pd_first_name;
                 $customer->phone =  $request->pd_phone;
+                $customer->user_id = $user->id;
                 $customer->save();
 
                 //customer id
                 $customer_id = $customer->id;
+
                 $new_order = new Order();
                 $new_order->customer_id = $customer->id;
-                $new_order->payment_method_id = 1;
-                $new_order->shop_id = 1;
+                $new_order->payment_method_id = $request->payment_method;
+                $new_order->shop_id = 4;
                 $new_order->sales_manager_id = 2;
-                $new_order->order_number = rand(100,999).$user->id;
+                $new_order->order_number = 'HTB'.date('ymdHis').$user->id;
+                $new_order->sub_total = $request->total_payable_amount;
+                $new_order->discount = $request->discount;
                 $new_order->save();
 
                 $order_data = json_decode($request->cartData, true);
@@ -157,6 +163,20 @@ class CheckOutController extends Controller
                         $oder_details->save();
                     }
                 }
+
+                // transaction 
+                $transaction = new Transaction();
+                $transaction->order_id =  $new_order->id;
+                $transaction->customer_id =  $customer->id;
+                $transaction->transactionable_type =  'ecommerce';
+                $transaction->transactionable_id =  '5';
+                $transaction->transaction_type =  '1';
+                $transaction->payment_method_id =  '1';
+                $transaction->status =  '2';
+                $transaction->amount =  $request->total_payable_amount;
+
+                $transaction->save();
+
             }
             $success['name'] = $user->name;
 
@@ -167,6 +187,7 @@ class CheckOutController extends Controller
 
             $success['return_payment_page']='yes';
             $success['order_id']=$new_order->id;
+            $success['payment_method']=$request->payment_method;   // 1 cash on delivary 2=>Online 
 
 
             return response()->json(['status'=>200,'message'=>'success','success' => $success], 200);
