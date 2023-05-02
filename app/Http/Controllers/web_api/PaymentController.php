@@ -10,8 +10,6 @@ class PaymentController extends Controller
 {
     public function getpaymentdetails(Request $request)
     {
-
-
         $pay = [
             'user' => PaymentGateWay::retrieveToken(),
             'urls' => PaymentGateWay::Url(),
@@ -31,7 +29,7 @@ class PaymentController extends Controller
                 'client_id' => 3,
                 'order_id_of_merchant' => time() . rand(0, 100),
                 'currency_of_transaction' => 'BDT',
-                'callback_success_url' => 'http://localhost:3000/onlinepayment/paysuccess',
+                'callback_success_url' => 'http://localhost/hometext_Api/public/api/payment-success',
                 'callback_fail_url' => 'http://localhost:3000/onlinepayment/payfaile',
                 'callback_cancel_url' => 'http://localhost:3000/onlinepayment/paycancel',
                 'callback_ipn_url' => 'http://localhost:3000/onlinepayment/payipn',
@@ -84,5 +82,21 @@ class PaymentController extends Controller
         curl_close($ch);
         $content = json_decode((string) $response, true);
         return  $content;
+    }
+
+
+    // payment operation 
+    /**
+     * Payment success 
+     */
+    function paymentsuccess(Request $request){
+
+        header("Location: http://localhost:3000/");
+        exit();
+        echo 'jhka';
+
+        echo '<pre>';
+        print_r($_REQUEST);
+        echo '</pre>';
     }
 }

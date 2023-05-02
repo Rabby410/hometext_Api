@@ -133,6 +133,10 @@ Route::middleware(['auth:api'])->post('/admin', function () {
 Route::post('check-out', [CheckOutController::class, 'checkout']);
 // Route::get('my-order', [CheckOutController::class, 'myorder']);
 Route::get('get-payment-details', [PaymentController::class, 'getpaymentdetails']);
+Route::post('payment-success', [PaymentController::class, 'paymentsuccess']);
+Route::get('payment-cancel', [PaymentController::class, 'paymentcancel']);
+Route::get('payment-fail', [PaymentController::class, 'paymentfail']);
+
 // order details 
 Route::get('my-order', [OrderDetailsController::class, 'myorder']);
 // user 
