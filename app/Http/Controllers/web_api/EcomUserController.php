@@ -16,7 +16,7 @@ class EcomUserController extends Controller
 {
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['signup', 'myorder']]);
+        $this->middleware('auth:api', ['except' => ['signup', 'myorder','registration']]);
     }
 
     // E-com user signup
@@ -34,6 +34,23 @@ class EcomUserController extends Controller
             return response()->json(['status'=>200,'message'=>'success','token' => $is_valid], 200);
         }else {
             $validator->errors()->add('password', 'Login credential is not valid.');
+            return response()->json(['status'=>400,'message'=>'validation_err','error' => $validator->errors()], 400);
+        }
+    }
+
+    // registration
+    
+    public function registration(Request $request){
+        $fields['password'] = 'required';
+        $fields['username'] = 'required';    
+        $fields['conf_password'] = 'required';    
+        $fields['first_name'] = 'required';    
+        $fields['email'] = 'required'; 
+        $fields['phone'] = 'required'; 
+        // $fields['is_subscribe'] = 'required'; 
+        $validator = Validator::make($request->all(), $fields);
+
+        if ($validator->fails()) {
             return response()->json(['status'=>400,'message'=>'validation_err','error' => $validator->errors()], 400);
         }
     }

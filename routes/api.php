@@ -140,6 +140,7 @@ Route::get('payment-fail', [PaymentController::class, 'paymentfail']);
 // order details 
 Route::get('my-order', [OrderDetailsController::class, 'myorder']);
 // user 
+Route::post('user-registration', [EcomUserController::class, 'registration']);
 Route::post('user-signup', [EcomUserController::class, 'signup']);
 // Route::post('user-signout',[EcomUserController::class,'signout']);
 
