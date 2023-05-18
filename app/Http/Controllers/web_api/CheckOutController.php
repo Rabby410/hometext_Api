@@ -25,7 +25,7 @@ class CheckOutController extends Controller
 
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['checkout','myorder']]);
+        $this->middleware('auth:api', ['except' => ['checkout', 'myorder']]);
     }
 
 
@@ -95,7 +95,6 @@ class CheckOutController extends Controller
 
             $fields['password'] = 'required';
             $fields['username'] = 'required';
-
         } else if ($request->user_type == self::GUEST_USER) {
         }
 
@@ -103,7 +102,7 @@ class CheckOutController extends Controller
         $validator = Validator::make($request->all(), $fields);
 
         if ($validator->fails()) {
-            return response()->json(['status'=>400,'message'=>'validation_err','error' => $validator->errors()], 400);
+            return response()->json(['status' => 400, 'message' => 'validation_err', 'error' => $validator->errors()], 400);
         }
         // return response()->json(['success' => json_decode($request->cartData)], 200);
 
@@ -112,7 +111,7 @@ class CheckOutController extends Controller
             $check_is_user_exist = User::where('email', '=', $request->username)->count();
             if ($check_is_user_exist) {
                 $validator->errors()->add('username', 'Username already exist.');
-                return response()->json(['status'=>400,'message'=>'validation_err','error' => $validator->errors()], 400);
+                return response()->json(['status' => 400, 'message' => 'validation_err', 'error' => $validator->errors()], 400);
             }
         }
 
@@ -123,12 +122,12 @@ class CheckOutController extends Controller
             $user->name =  $request->pd_first_name;
             $user->phone =  $request->pd_phone;
             $user->shop_id = 4;
-            $user->salt = rand(1111,9999);
+            $user->salt = rand(1111, 9999);
             $user->save();
 
             $token = Auth::attempt(['email' => $request->username, 'password' => $request->password]);
 
-            if($token){
+            if ($token) {
                 $customer = new Customer();
                 $customer->email =  $request->username;
                 $customer->name =  $request->pd_first_name;
@@ -144,15 +143,15 @@ class CheckOutController extends Controller
                 $new_order->payment_method_id = $request->payment_method;
                 $new_order->shop_id = 4;
                 $new_order->sales_manager_id = 2;
-                $new_order->order_number = 'HTB'.date('ymdHis').$user->id;
+                $new_order->order_number = 'HTB' . date('ymdHis') . $user->id;
                 $new_order->sub_total = $request->total_payable_amount;
                 $new_order->discount = $request->discount;
                 $new_order->save();
 
                 $order_data = json_decode($request->cartData, true);
 
-                if($order_data){
-                    foreach($order_data as $key=>$value){
+                if ($order_data) {
+                    foreach ($order_data as $key => $value) {
                         $oder_details = new OrderDetails();
                         $oder_details->order_id = $new_order->id;
                         $oder_details->category_id = 1;
@@ -176,7 +175,6 @@ class CheckOutController extends Controller
                 $transaction->amount =  $request->total_payable_amount;
 
                 $transaction->save();
-
             }
             $success['name'] = $user->name;
 
@@ -185,13 +183,12 @@ class CheckOutController extends Controller
                 'type' => 'bearer',
             ];
 
-            $success['return_payment_page']='yes';
-            $success['order_id']=$new_order->id;
-            $success['payment_method']=$request->payment_method;   // 1 cash on delivary 2=>Online 
+            $success['return_payment_page'] = 'yes';
+            $success['order_id'] = $new_order->id;
+            $success['payment_method'] = $request->payment_method;   // 1 cash on delivary 2=>Online 
 
 
-            return response()->json(['status'=>200,'message'=>'success','success' => $success], 200);
-
+            return response()->json(['status' => 200, 'message' => 'success', 'success' => $success], 200);
         } catch (Exception $e) {
             return response()->json(['error' => $e->getMessage()], 401);
         }
@@ -205,25 +202,90 @@ class CheckOutController extends Controller
 
 
 
-    public function myorder(){
+
+    public function checkoutbyloginuser(Request $request)
+    {
+        if (Auth::check()) {
+            $customer =  Customer::where('user_id', '=', Auth::user()->id)->first();
+
+            if (empty($customer)) {
+                $customer = new Customer();
+                $customer->email =  Auth::user()->email;
+                $customer->name =  Auth::user()->name;
+                $customer->phone =  Auth::user()->phone;
+                $customer->user_id = Auth::user()->id;
+                $customer->save();
+                //customer id
+                $customer_id = $customer->id;
+            } else
+                $customer_id = $customer->id;
+
+
+            $new_order = new Order();
+            $new_order->customer_id = $customer->id;
+            $new_order->payment_method_id = $request->payment_method;
+            $new_order->shop_id = 4;
+            $new_order->sales_manager_id = 2;
+            $new_order->order_number = 'HTB' . date('ymdHis') . Auth::user()->id;
+            $new_order->sub_total = $request->total_payable_amount;
+            $new_order->discount = $request->discount;
+            $new_order->save();
+
+            $order_data = json_decode($request->cartData, true);
+
+            if ($order_data) {
+                foreach ($order_data as $key => $value) {
+                    $oder_details = new OrderDetails();
+                    $oder_details->order_id = $new_order->id;
+                    $oder_details->category_id = 1;
+                    $oder_details->name = $value['name'];
+                    $oder_details->sku = $value['sku'];
+                    $oder_details->price = $value['price'];
+                    $oder_details->quantity = $value['quantity'];
+                    $oder_details->save();
+                }
+            }
+            // transaction 
+            $transaction = new Transaction();
+            $transaction->order_id =  $new_order->id;
+            $transaction->customer_id =  $customer->id;
+            $transaction->transactionable_type =  'ecommerce';
+            $transaction->transactionable_id =  '5';
+            $transaction->transaction_type =  '1';
+            $transaction->payment_method_id =  '1';
+            $transaction->status =  '2';
+            $transaction->amount =  $request->total_payable_amount;
+            $transaction->save();
+
+
+            $success['name'] = Auth::user()->name;
+
+            $success['return_payment_page'] = 'yes';
+            $success['order_id'] = $new_order->id;
+            $success['payment_method'] = $request->payment_method;   // 1 cash on delivary 2=>Online    
+
+            return response()->json(['status' => 200, 'message' => 'success', 'success' => $success], 200);
+        } else {
+            return response()->json([
+                'status' => 'error',
+                'user' => [],
+            ], 200);
+        }
+    }
+
+    public function myorder()
+    {
         if (Auth::check()) {
             return response()->json([
                 'status' => 'success',
                 'user' => Auth::user(),
-            ],200);
-        }else {
+            ], 200);
+        } else {
             return response()->json([
                 'status' => 'error',
-                'user' =>[],
+                'user' => [],
             ], 200);
-
-
-
         }
-
-
-
-
     }
 
     // protected function createNewToken($token){

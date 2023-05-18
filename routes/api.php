@@ -131,6 +131,7 @@ Route::middleware(['auth:api'])->post('/admin', function () {
 });
 
 Route::post('check-out', [CheckOutController::class, 'checkout']);
+Route::post('check-out-logein-user', [CheckOutController::class, 'checkoutbyloginuser']);
 // Route::get('my-order', [CheckOutController::class, 'myorder']);
 Route::get('get-payment-details', [PaymentController::class, 'getpaymentdetails']);
 Route::post('payment-success', [PaymentController::class, 'paymentsuccess']);
@@ -142,6 +143,8 @@ Route::get('my-order', [OrderDetailsController::class, 'myorder']);
 // user 
 Route::post('user-registration', [EcomUserController::class, 'registration']);
 Route::post('user-signup', [EcomUserController::class, 'signup']);
+Route::get('my-profile', [EcomUserController::class, 'myprofile']);
+Route::post('my-profile-update', [EcomUserController::class, 'updateprofile']);
 // Route::post('user-signout',[EcomUserController::class,'signout']);
 
 // Manage wishlist 
