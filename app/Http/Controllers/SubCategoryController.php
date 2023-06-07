@@ -33,7 +33,7 @@ class SubCategoryController extends Controller
     {
         $sub_category = $request->except('photo');
         $sub_category['slug'] = Str::slug($request->input('slug'));
-        $sub_category['user_id'] = auth()->id();
+//        $sub_category['user_id'] = auth()->id;
         if($request->has('photo')){
             $sub_category['photo'] = $this->processImageUpload($request->input('photo'), $sub_category['slug']);
         }

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AttributeValueController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BrandController;
@@ -121,8 +122,9 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::apiResource('customer', CustomerController::class);
     Route::apiResource('order', OrderController::class);
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
-});
 
+});
+Route::get('get-reports', [ReportController::class, 'index']);
 
 // for check out
 
@@ -138,14 +140,14 @@ Route::post('payment-success', [PaymentController::class, 'paymentsuccess']);
 Route::get('payment-cancel', [PaymentController::class, 'paymentcancel']);
 Route::get('payment-fail', [PaymentController::class, 'paymentfail']);
 
-// order details 
+// order details
 Route::get('my-order', [OrderDetailsController::class, 'myorder']);
-// user 
+// user
 Route::post('user-registration', [EcomUserController::class, 'registration']);
 Route::post('user-signup', [EcomUserController::class, 'signup']);
 Route::get('my-profile', [EcomUserController::class, 'myprofile']);
 Route::post('my-profile-update', [EcomUserController::class, 'updateprofile']);
 // Route::post('user-signout',[EcomUserController::class,'signout']);
 
-// Manage wishlist 
+// Manage wishlist
 Route::post('wish-list', [WishListController::class, 'wishlist']);
