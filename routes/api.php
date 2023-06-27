@@ -66,8 +66,8 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
     Route::apiResource('brand', BrandController::class);
-    Route::apiResource('price_fromula', PriceFormulaController::class);
-    Route::apiResource('price_fromula_variables', PriceFormulaVariablesController::class);
+    Route::apiResource('price_formula', PriceFormulaController::class);
+    Route::apiResource('price_formula_variables', PriceFormulaVariablesController::class);
     Route::apiResource('supplier', SupplierController::class);
     Route::apiResource('attribute', AttributeController::class);
     Route::apiResource('attribute-value', AttributeValueController::class);
@@ -117,8 +117,8 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
     Route::apiResource('brand', BrandController::class);
-    Route::apiResource('price_fromula', PriceFormulaController::class);
-    Route::apiResource('price_fromula_variables', PriceFormulaVariablesController::class);
+    Route::apiResource('price_formula', PriceFormulaController::class);
+    Route::apiResource('price_formula_variables', PriceFormulaVariablesController::class);
     Route::apiResource('supplier', SupplierController::class);
     Route::apiResource('attribute', AttributeController::class);
     Route::apiResource('attribute-value', AttributeValueController::class);
