@@ -42,6 +42,7 @@ class ProductController extends Controller
             'created_by:id,name',
             'updated_by:id,name',
             'primary_photo',
+            'price_formula',
             'product_attributes',
             'product_attributes.attributes',
             'product_attributes.attribute_value',
@@ -54,78 +55,78 @@ class ProductController extends Controller
      * @param StoreProductRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-//    public function store(StoreProductRequest $request)
-//    {
-//        try{
-//            DB::beginTransaction();
-//            $product = (new Product())->storeProduct($request->all(), auth()->id=1);
-//            // $product =$product->storeProduct($product_data);
-//            if($request->has('attributes')){
-//                (new ProductAttribute())->storeAttribute ($request->input('attributes'), $product);
-//            }
-//            if($request->has('specifications')){
-//                ( new ProductSpecification())-> storeProductSpecification ($request->input('specifications'), $product);
-//            }
-//
-//            DB::commit();
-//            return response()->json(['msg'=> 'Product Saved Successfully', 'cls'=>'success', 'product_id'=>$product->id]);
-//
-//        }catch(\Throwable $e){
-//            info("PRODUCT_SAVE_FAILED", ['data'=>$request->all(), 'error'=>$e->getMessage()]);
-//            DB::rollBack();
-//            return response()->json(['msg'=> $e->getMessage(), 'cls'=>'warning']);
-//        }
-//    }
-
     public function store(StoreProductRequest $request)
     {
-        try {
+        try{
             DB::beginTransaction();
-            $product = (new Product())->storeProduct($request->all(), auth()->id = 1);
-
-            // Publish on Facebook page
-            $fb = new Facebook([
-                'app_id' => '2360056677506427',
-                'app_secret' => '3267ca22d08a1c3eae6afe543e799f83',
-                'default_graph_version' => 'v17.0',
-                // Add any additional configuration options here
-            ]);
-
-            // Get access token with publish_pages permission
-            $accessToken = 'EAAhidYPpnXsBAOmU99fn5UCx7ZCJmRsLlJkNZCzoyASMgsiUelB15TGDvJGZC1VLxLM5wEnAaMNZAxiUr6ULDA4EzeKl0gjGFd2MMKF4jb5NWGSVWjrFGlf0YnIwQZCfgvPZCWsmQUnSlsy1RDfmtPlINil41PaktPnOYxF6AMNzTXNM8VA37I7KXMBpWs8ldGil5v7ZA0wH7MIjfy5DA2J';
-
-            // Prepare the message and other parameters
-            $message = 'Check out our new product: ' . $product->name;
-            $link = 'https://bd.hometex.ltd/Shop/' . $product->id;
-            // Add other necessary parameters like image, description, etc.
-
-            // Make a POST request to publish on the page
-            $response = $fb->post('/hometexbangladesh.store/feed', [
-                'message' => $message,
-                'link' => $link,
-                // Add other parameters here
-            ], $accessToken);
-
-            // Get the published post ID
-            $graphNode = $response->getGraphNode();
-            $postID = $graphNode['id'];
-
-            if ($request->has('attributes')) {
-                (new ProductAttribute())->storeAttribute($request->input('attributes'), $product);
+            $product = (new Product())->storeProduct($request->all(), auth()->id=1);
+            // $product =$product->storeProduct($product_data);
+            if($request->has('attributes')){
+                (new ProductAttribute())->storeAttribute ($request->input('attributes'), $product);
             }
-            if ($request->has('specifications')) {
-                (new ProductSpecification())->storeProductSpecification($request->input('specifications'), $product);
+            if($request->has('specifications')){
+                ( new ProductSpecification())-> storeProductSpecification ($request->input('specifications'), $product);
             }
 
             DB::commit();
-            return response()->json(['msg' => 'Product Saved Successfully', 'cls' => 'success', 'product_id' => $product->id]);
+            return response()->json(['msg'=> 'Product Saved Successfully', 'cls'=>'success', 'product_id'=>$product->id]);
 
-        } catch (\Throwable $e) {
-            info("PRODUCT_SAVE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
+        }catch(\Throwable $e){
+            info("PRODUCT_SAVE_FAILED", ['data'=>$request->all(), 'error'=>$e->getMessage()]);
             DB::rollBack();
-            return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
+            return response()->json(['msg'=> $e->getMessage(), 'cls'=>'warning']);
         }
     }
+
+//    public function store(StoreProductRequest $request)
+//    {
+//        try {
+//            DB::beginTransaction();
+//            $product = (new Product())->storeProduct($request->all(), auth()->id = 1);
+//
+//            // Publish on Facebook page
+//            $fb = new Facebook([
+//                'app_id' => '2360056677506427',
+//                'app_secret' => '3267ca22d08a1c3eae6afe543e799f83',
+//                'default_graph_version' => 'v17.0',
+//                // Add any additional configuration options here
+//            ]);
+//
+//            // Get access token with publish_pages permission
+//            $accessToken = 'EAAhidYPpnXsBAOmU99fn5UCx7ZCJmRsLlJkNZCzoyASMgsiUelB15TGDvJGZC1VLxLM5wEnAaMNZAxiUr6ULDA4EzeKl0gjGFd2MMKF4jb5NWGSVWjrFGlf0YnIwQZCfgvPZCWsmQUnSlsy1RDfmtPlINil41PaktPnOYxF6AMNzTXNM8VA37I7KXMBpWs8ldGil5v7ZA0wH7MIjfy5DA2J';
+//
+//            // Prepare the message and other parameters
+//            $message = 'Check out our new product: ' . $product->name;
+//            $link = 'https://bd.hometex.ltd/Shop/' . $product->id;
+//            // Add other necessary parameters like image, description, etc.
+//
+//            // Make a POST request to publish on the page
+//            $response = $fb->post('/hometexbangladesh.store/feed', [
+//                'message' => $message,
+//                'link' => $link,
+//                // Add other parameters here
+//            ], $accessToken);
+//
+//            // Get the published post ID
+//            $graphNode = $response->getGraphNode();
+//            $postID = $graphNode['id'];
+//
+//            if ($request->has('attributes')) {
+//                (new ProductAttribute())->storeAttribute($request->input('attributes'), $product);
+//            }
+//            if ($request->has('specifications')) {
+//                (new ProductSpecification())->storeProductSpecification($request->input('specifications'), $product);
+//            }
+//
+//            DB::commit();
+//            return response()->json(['msg' => 'Product Saved Successfully', 'cls' => 'success', 'product_id' => $product->id]);
+//
+//        } catch (\Throwable $e) {
+//            info("PRODUCT_SAVE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
+//            DB::rollBack();
+//            return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
+//        }
+//    }
 
     /**
      * Display the specified resource.

@@ -34,7 +34,7 @@ class CategoryController extends Controller
     {
         $category = $request->except('photo');
         $category['slug'] = Str::slug($request->input('slug'));
-        $category['user_id'] = auth()->id();
+//        $category['user_id'] = auth()->id();
         if($request->has('photo')){
             $category['photo'] = $this->processImageUpload($request->input('photo'), $category['slug']);
         }

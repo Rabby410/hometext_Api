@@ -31,6 +31,7 @@ class Product extends Model
             'discount_start',
             'name',
             'price',
+            'price_formula',
             'sku',
             'slug',
             'status',
@@ -71,6 +72,7 @@ class Product extends Model
             'discount_percent' => $input['discount_percent'] ?? 0,
             'discount_start' => $input['discount_start'] ?? null,
             'name' => $input['name'] ?? '',
+            'price_formula' => $input['price_formula'] ?? '',
             'price' => $input['price'] ?? 0,
             'sku' => $input['sku'] ?? '',
             'slug' => $input['slug'] ? Str::slug($input['slug']) : '',
@@ -101,6 +103,7 @@ class Product extends Model
             'updated_by:id,name',
             'primary_photo',
             'product_attributes',
+//            'price_formula',
             'product_attributes.attributes',
             'product_attributes.attribute_value',
         ]);
