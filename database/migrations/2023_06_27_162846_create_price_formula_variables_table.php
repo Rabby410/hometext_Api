@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('name')->nullable();
             $table->string('short_name')->nullable();
             $table->tinyInteger('status')->nullable();
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete()->nullable()   ;
             $table->timestamps();
         });
     }

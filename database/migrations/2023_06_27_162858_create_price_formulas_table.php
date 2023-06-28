@@ -17,7 +17,6 @@ return new class extends Migration
             $table->string('formula')->nullable();
             $table->string('description')->nullable();
             $table->tinyInteger('status')->nullable();
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete()->nullable()   ;
             $table->timestamps();
         });
     }

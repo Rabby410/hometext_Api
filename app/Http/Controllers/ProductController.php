@@ -42,13 +42,13 @@ class ProductController extends Controller
             'created_by:id,name',
             'updated_by:id,name',
             'primary_photo',
-            'price_formula',
             'product_attributes',
             'product_attributes.attributes',
             'product_attributes.attribute_value',
         ])->where('id', '=', $id)->first();
         return response()->json($products);
     }
+
 
 
     /**

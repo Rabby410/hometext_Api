@@ -13,7 +13,7 @@ class PriceFormula extends Model
     use HasFactory;
     public const STATUS_ACTIVE = 1;
 
-    protected $fillable = ['name','formula','status','user_id'];
+    protected $fillable = ['name','formula','status'];
     final public function storePriceFormula (array $input): Builder|Model
     {
         return self::query()->create($input);
@@ -23,18 +23,18 @@ class PriceFormula extends Model
      *@param array $input
      * @return LengthAwarePaginator
      */
-    final public function getAllPriceFormulas(array $input):LengthAwarePaginator
-    {
-        $per_page = $input['per_page'] ?? 10;
-        $query = self::query();
-        if (!empty($input['search'])) {
-            $query->where('name', 'like', '%' . $input['search'] . '%');
-        }
-        if (!empty($input['order_by'])) {
-            $query->orderBy($input['order_by'], $input['direction'] ?? 'asc');
-        }
-        return $query->with('user:id,name')->paginate($per_page);
-    }
+//    final public function getAllPriceFormulas(array $input):LengthAwarePaginator
+//    {
+//        $per_page = $input['per_page'] ?? 10;
+//        $query = self::query();
+//        if (!empty($input['search'])) {
+//            $query->where('name', 'like', '%' . $input['search'] . '%');
+//        }
+//        if (!empty($input['order_by'])) {
+//            $query->orderBy($input['order_by'], $input['direction'] ?? 'asc');
+//        }
+//        return $query->paginate($per_page);
+//    }
 
     /**
      *@return \Illuminate\Database\Eloquent\Relations\BelongsTo
