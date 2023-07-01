@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('sub_categories', function (Blueprint $table) {
+        Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
@@ -19,8 +19,7 @@ return new class extends Migration
             $table->tinyInteger('status')->nullable();
             $table->string('description')->nullable();
             $table->string('photo')->nullable();
-            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete()->nullable();
-            $table->foreignId('category_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete()->nullable();
+            $table->foreignId('user_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete()->nullable()   ;
             $table->timestamps();
         });
     }
@@ -30,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('sub_categories');
+        Schema::dropIfExists('categories');
     }
 };
