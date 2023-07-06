@@ -35,6 +35,7 @@ class StoreProductRequest extends FormRequest
             'cost' =>'required|numeric',
             'price' =>'numeric',
             'price_formula' =>'string',
+            'field_limit' =>'string',
             'status' =>'required|numeric',
             'stock' =>'required|numeric',
             'description' =>'required|max:1000|min:10',

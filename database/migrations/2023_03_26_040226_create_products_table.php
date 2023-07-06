@@ -17,6 +17,7 @@ return new class extends Migration
             $table->string('sku')->nullable();
             $table->string('slug')->nullable();
             $table->string('price_formula')->nullable();
+            $table->string('field_limit')->nullable();
             $table->integer('cost')->nullable();
             $table->integer('price')->nullable();
             $table->integer('stock')->nullable();

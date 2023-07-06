@@ -15,11 +15,13 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->string('email')->unique();
-            $table->string('phone')->unique();
+            $table->string('phone');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('salt');
             $table->string('photo')->nullable();
-            $table->integer('role_id')->default(2)->comment('1 = admin & 2 = sales manager');
+            $table->integer('role_id')->default(2)->comment('1 = admin, 2 = sales manager & 3 = customer');
+            $table->integer('shop_id');
             $table->rememberToken();
             $table->timestamps();
         });
