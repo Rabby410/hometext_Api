@@ -42,7 +42,7 @@ use App\Http\Controllers\web_api\WishListController;
 
 // Route::get('test', [scriptManager::class, 'getCountry']);
 Route::post('login', [AuthController::class, 'login']);
-Route::get('products-web', [ProductController::class, 'index']);
+Route::get('products-web/{is_all?}', [ProductController::class, 'index']);
 Route::get('products-web/{product_id}', [ProductController::class, 'index']);
 Route::get('products-details-web/{id}', [ProductController::class, 'productsdetails']);
 

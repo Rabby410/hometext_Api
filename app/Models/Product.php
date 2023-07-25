@@ -91,7 +91,7 @@ class Product extends Model
         return self::query()->with('primary_photo')->findOrFail($id);
     }
 
-    public function getProductList($input)
+    public function getProductList($input,$is_all)
     {
         $per_page = $input['per_page'] ??10;
 
@@ -117,7 +117,10 @@ class Product extends Model
         if (!empty($input['order_by'])) {
             $query->orderBy($input['order_by'], $input['direction'] ?? 'asc');
         }
-        return $query->paginate($per_page);
+        if($is_all == 'yes')
+            return $query->get();
+        else 
+            return $query->paginate($per_page);
     }
 
 

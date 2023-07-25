@@ -20,9 +20,9 @@ class ProductController extends Controller
      * @param Request $request
      * @return AnonymousResourceCollection
      */
-    final public function index(Request $request): AnonymousResourceCollection
+    final public function index(Request $request, $is_all = 'yes'): AnonymousResourceCollection
     {
-        $products = (new Product())->getProductList($request);
+        $products = (new Product())->getProductList($request, $is_all);
         return ProductListResource::collection($products);
     }
 
