@@ -10,7 +10,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProductListResource extends JsonResource
+class ProductEditResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -38,8 +38,6 @@ class ProductListResource extends JsonResource
             'discount_fixed'=>$this->discount_fixed . PriceManager::CURRENCY_SYMBOL,
             'discount_percent'=>$this->discount_percent . '%',
             'description'=>$this->description,
-            'created_at'=>$this->created_at->toDayDateTimeString(),
-            'updated_at'=>$this->updated_at == $this->updated_at ? 'Not Updated' : $this->updated_at->toDayDateTimeString(),
             'discount_start'=>$this->discount_start != null ? Carbon::create($this->discount_start) ->toDayDateTimeString(): null,
             'discount_end'=>$this->discount_end != null ? Carbon::create($this->discount_end)->toDayDateTimeString():null,
 
@@ -49,9 +47,8 @@ class ProductListResource extends JsonResource
             'child_sub_category'=>$this->child_sub_category?->name,
             'supplier'=>$this->supplier ? $this->supplier?->name . ' ' . $this->supplier?->phone : null,
             'country'=>$this->country?->name,
-            'created_by'=>$this->created_by?->name,
             'updated_by'=>$this->updated_by?->name,
-            'primary_photo'=>ImageUploadManager::prepareImageUrl(ProductPhoto::THUMB_PHOTO_UPLOAD_PATH, $this->primary_photo?->photo),
+            'primary_photo_preview'=>ImageUploadManager::prepareImageUrl(ProductPhoto::THUMB_PHOTO_UPLOAD_PATH, $this->primary_photo?->photo),
 
             'attributes'=>ProductAttributeListResource::collection($this->product_attributes),
         ];

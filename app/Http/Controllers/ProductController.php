@@ -20,12 +20,18 @@ class ProductController extends Controller
      * @param Request $request
      * @return AnonymousResourceCollection
      */
-    final public function index(Request $request, $is_all = 'yes'): AnonymousResourceCollection
+    public function index(Request $request, $is_all = 'yes'): AnonymousResourceCollection
     {
-        $products = (new Product())->getProductList($request, $is_all);
+        $input = [
+            'per_page' => $request->input('per_page'), // You can adjust this key according to your request data
+            'search' => $request->input('search'),
+            'order_by' => $request->input('order_by'),
+            'direction' => $request->input('direction'),
+        ];
+
+        $products = (new Product())->getProductList($input, $is_all);
         return ProductListResource::collection($products);
     }
-
 
     /**
      *product details for web
@@ -36,6 +42,7 @@ class ProductController extends Controller
         $products = Product::query()->with([
             'category:id,name',
             'sub_category:id,name',
+            'child_sub_category:id,name',
             'brand:id,name',
             'country:id,name',
             'supplier:id,name,phone',
@@ -133,7 +140,22 @@ class ProductController extends Controller
      */
     public function show(Product $product)
     {
-        //
+        $productDetails = $product->load([
+            'category:id,name',
+            'sub_category:id,name',
+            'child_sub_category:id,name',
+            'brand:id,name',
+            'country:id,name',
+            'supplier:id,name,phone',
+            'created_by:id,name',
+            'updated_by:id,name',
+            'primary_photo',
+            'product_attributes',
+            'product_attributes.attributes',
+            'product_attributes.attribute_value',
+        ]);
+
+        return response()->json($productDetails);
     }
 
     /**
@@ -149,7 +171,31 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, Product $product)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $product->update($request->except(['attributes', 'specifications']));
+
+            // Update attributes if provided
+            if ($request->has('attributes')) {
+                $productAttribute = new ProductAttribute();
+                $productAttribute->updateAttribute($request->input('attributes'), $product);
+            }
+
+            // Update specifications if provided
+            if ($request->has('specifications')) {
+                $productSpecification = new ProductSpecification();
+                $productSpecification->updateProductSpecification($request->input('specifications'), $product);
+            }
+
+            DB::commit();
+            return response()->json(['msg' => 'Product Updated Successfully', 'cls' => 'success', 'product_id' => $product->id]);
+
+        } catch (\Throwable $e) {
+            info("PRODUCT_UPDATE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
+            DB::rollBack();
+            return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
+        }
     }
 
     /**
@@ -157,7 +203,19 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
-        //
+        try {
+            DB::beginTransaction();
+
+            $product->delete();
+
+            DB::commit();
+            return response()->json(['msg' => 'Product Deleted Successfully', 'cls' => 'success']);
+
+        } catch (\Throwable $e) {
+            info("PRODUCT_DELETE_FAILED", ['product_id' => $product->id, 'error' => $e->getMessage()]);
+            DB::rollBack();
+            return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
+        }
     }
 
     public function get_product_list_for_bar_code(Request $request)

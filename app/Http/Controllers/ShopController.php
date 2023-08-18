@@ -36,7 +36,7 @@ public function store(StoreShopRequest $request)
 {
     $shopData = $request->all();
     $addressData = $request->all();
-    
+
     if ($request->has('logo')) {
         $name = Str::slug($shopData['name'] . now());
         $shopData['logo'] = ImageUploadManager::processImageUpload(
@@ -50,25 +50,25 @@ public function store(StoreShopRequest $request)
             Shop::LOGO_THUMB_HEIGHT
         );
     }
-    
+
     try {
         DB::beginTransaction();
-        
+
         $shop = Shop::create($shopData);
         $address = $shop->address()->create($addressData);
-        
+
         DB::commit();
-        
+
         return response()->json(['msg' => 'Shop Added Successfully', 'cls' => 'success']);
     } catch (Throwable $e) {
         if (isset($shopData['logo'])) {
             ImageUploadManager::deletePhoto(Shop::IMAGE_UPLOAD_PATH, $shopData['logo']);
             ImageUploadManager::deletePhoto(Shop::THUMB_IMAGE_UPLOAD_PATH, $shopData['logo']);
         }
-        
+
         info('Shop', ['Shop' => $shopData, 'address' => $addressData, 'error' => $e]);
         DB::rollBack();
-        
+
         return response()->json(['msg' => 'Have Validation Error', 'cls' => 'warning', 'flag' => 'true']);
     }
 }
@@ -156,5 +156,13 @@ public function destroy(Shop $shop): JsonResponse
 
         return response()->json(['msg' => 'Error deleting shop', 'cls' => 'error']);
     }
+    }
+    /**
+     * @return JsonResponse
+     */
+    final public function get_shop_list():JsonResponse
+    {
+        $shops = (new Shop())->getShopListIdName();
+        return response()->json($shops);
     }
 }

@@ -37,6 +37,7 @@ class OrderDetails extends Model
             'sale_price'=>PriceManager::calculate_sell_price($product->price, $product->discount_percent, $product->discount_fixed, $product->discount_start, $product->discount_end )['price'],
             'sku' => $product->sku,
             'sub_category_id' => $product->sub_category_id,
+            'child_sub_category_id' => $product->child_sub_category_id,
             'supplier_id' => $product->supplier_id,
             'quantity' => $product->quantity,
             'photo' => $product->primary_photo?->photo,

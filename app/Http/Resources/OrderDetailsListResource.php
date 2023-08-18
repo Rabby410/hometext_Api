@@ -25,6 +25,7 @@ class OrderDetailsListResource extends JsonResource
             'brand'=>$this->brand?->name,
             'category'=>$this->category?->name,
             'sub_category'=>$this->sub_category?->name,
+            'child_sub_category'=>$this->child_sub_category?->name,
             'supplier'=>$this->supplier?->name,
             'cost'=>$this->cost . PriceManager::CURRENCY_SYMBOL,
             'price'=>number_format($this->price) . PriceManager::CURRENCY_SYMBOL,

@@ -69,7 +69,7 @@ class SubCategoryController extends Controller
         $sub_category_data = $request->except('photo');
         $sub_category_data['slug'] = Str::slug($request->input('slug'));
         if($request->has('photo')){
-            $category_data['photo']  = $this->processImageUpload($request->input('photo'),  $sub_category_data['slug'], $subCategory->photo);
+            $sub_category_data['photo']  = $this->processImageUpload($request->input('photo'),  $sub_category_data['slug'], $subCategory->photo);
         }
         $subCategory->update($sub_category_data);
         return response()->json(['msg'=>'SUb Category Updated Successfully', 'cls' => 'success']);

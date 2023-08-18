@@ -28,6 +28,7 @@ class StoreProductRequest extends FormRequest
             'brand_id' =>'numeric',
             'country_id' =>'numeric',
             'sub_category_id' =>'numeric',
+            'child_sub_category_id' =>'numeric',
             'supplier_id' =>'numeric',
             'discount_fixed' =>'numeric',
             'discount_percent' =>'numeric',

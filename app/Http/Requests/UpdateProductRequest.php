@@ -11,7 +11,7 @@ class UpdateProductRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,29 @@ class UpdateProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'name' =>'string|required|min:3|max:255',
+            'slug' =>'string|required|min:3|max:255|unique:products',
+            'sku' =>'string|required|min:3|max:255|unique:products',
+            'brand_id' =>'numeric',
+            'country_id' =>'numeric',
+            'sub_category_id' =>'numeric',
+            'child_sub_category_id' =>'numeric',
+            'supplier_id' =>'numeric',
+            'discount_fixed' =>'numeric',
+            'discount_percent' =>'numeric',
+            'category_id' =>'required|numeric',
+            'cost' =>'required|numeric',
+            'price' =>'numeric',
+            'price_formula' =>'string',
+            'field_limit' =>'string',
+            'status' =>'required|numeric',
+            'stock' =>'required|numeric',
+            'isFeatured' =>'numeric',
+            'isNew' =>'numeric',
+            'isTrending' =>'numeric',
+            'description' =>'required|max:1000|min:10',
+            'attributes' =>'array',
+            'specifications' =>'array',
         ];
     }
 }

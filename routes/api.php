@@ -3,6 +3,7 @@
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AttributeValueController;
+use App\Http\Controllers\ChildSubCategoryController;
 use App\Http\Controllers\CsvController;
 use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\ReportController;
@@ -88,12 +89,15 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
     Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
     Route::get('get-sub-category-list', [SubCategoryController::class, 'get_sub_category_list_fc']);
+    Route::get('get-child-sub-category-list', [ChildSubCategoryController::class, 'get_child_sub_category_list']);
     Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
     Route::get('get-product-list-for-bar-code', [ProductController::class, 'get_product_list_for_bar_code']);
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
+    Route::get('get-child-sub-category-list/{category_id}', [ChildSubCategoryController::class, 'get_child_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
+    Route::apiResource('child-sub-category', ChildSubCategoryController::class);
     Route::apiResource('brand', BrandController::class);
     Route::apiResource('formula', FormulaController::class);
     Route::apiResource('supplier', SupplierController::class);
