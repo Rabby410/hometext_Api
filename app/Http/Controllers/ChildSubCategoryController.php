@@ -141,4 +141,13 @@ class ChildSubCategoryController extends Controller
         ImageUploadManager::uploadImage($name, $width_thumb, $height_thumb, $path_thumb, $file);
         return $photo_name;
     }
+    /**
+     * @param int $category_id
+     * @return JsonResponse
+     */
+    final public function get_child_sub_category_list(int $category_id):JsonResponse
+    {
+        $childSubCategories = (new ChildSubCategory())->getChildSubCategoryIdAndName($category_id);
+        return response()->json($childSubCategories);
+    }
 }

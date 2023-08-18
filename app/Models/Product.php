@@ -122,62 +122,81 @@ class Product extends Model
         }
     }
 
-    public function category(): BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function category():BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
-
-    public function sub_category(): BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function sub_category():BelongsTo
     {
         return $this->belongsTo(SubCategory::class, 'sub_category_id');
-    }
-
-    public function child_sub_category(): BelongsTo
+    } /**
+ * @return BelongsTo
+ */
+    public function child_sub_category():BelongsTo
     {
         return $this->belongsTo(ChildSubCategory::class, 'child_sub_category_id');
     }
-
-    public function brand(): BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function brand():BelongsTo
     {
         return $this->belongsTo(Brand::class, 'brand_id');
     }
-
-    public function country(): BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function country():BelongsTo
     {
         return $this->belongsTo(Country::class, 'country_id');
     }
-
-    public function supplier(): BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function supplier():BelongsTo
     {
         return $this->belongsTo(Supplier::class, 'supplier_id');
     }
-
-    public function created_by(): BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function created_by():BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
     }
-
-    public function updated_by(): BelongsTo
+    /**
+     * @return BelongsTo
+     */
+    public function updated_by():BelongsTo
     {
         return $this->belongsTo(User::class, 'updated_by_id');
     }
-
-    public function primary_photo(): HasOne
+    /**
+     * @return hasOne
+     */
+    public function primary_photo():hasOne
     {
         return $this->hasOne(ProductPhoto::class)->where('is_primary', 1);
     }
-
-    public function product_attributes(): HasMany
+    /**
+     * @return HasMany
+     */
+    public function product_attributes():HasMany
     {
         return $this->hasMany(ProductAttribute::class);
     }
 
-    public function getProductsForBarcode(array $input): Collection
+    public function getProductForBarCode($input)
     {
         $query = self::query()->select('id', 'name', 'brand_id', 'sku', 'price', 'discount_end', 'discount_percent', 'discount_start');
-
-        if (!empty($input['name'])) {
-            $query->where('name', 'like', '%' . $input['name'] . "%");
+        if (!empty($input['name'])){
+            $query->where('name', 'like', '%'.$input['name']."%");
         }
 
         if (!empty($input['category_id'])) {
@@ -187,11 +206,10 @@ class Product extends Model
         if (!empty($input['sub_category_id'])) {
             $query->where('sub_category_id', $input['sub_category_id']);
         }
-
         return $query->get();
     }
 
-    public function getAllProducts(array $columns = ['*']): Collection
+    public function getAllProduct($columns =  ['*'])
     {
         $products = DB::table('products')->select($columns)->get();
         return collect($products);
