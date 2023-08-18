@@ -14,6 +14,7 @@ class SubCategory extends Model
     use HasFactory;
     public const IMAGE_UPLOAD_PATH = 'images/uploads/sub_category/';
     public const THUMB_IMAGE_UPLOAD_PATH = 'images/uploads/sub_category_thumb/';
+    public const STATUS_ACTIVE = 1;
 
     protected $fillable = ['name','category_id','slug','serial','status','description','photo','user_id' ];
 
@@ -66,6 +67,14 @@ class SubCategory extends Model
     final public function getSubCategoryIdAndName(int $category_id):Collection
     {
         return self::query()->select('id', 'name')->where('category_id', $category_id)->get();
+    }
+
+    /**
+     * @return \Illuminate\Support\Collection
+     */
+    final public function getSubCategoryIdAndNameFC():Collection
+    {
+        return self::query()->where('status', self::STATUS_ACTIVE)->select('id', 'name')->get();
     }
 }
 

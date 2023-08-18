@@ -114,6 +114,14 @@ class SubCategoryController extends Controller
             ImageUploadManager::uploadImage($name, $width_thumb, $height_thumb, $path_thumb, $file);
             return $photo_name;
         }
+    /**
+     * @return JsonResponse
+     */
+    final public function get_sub_category_list_fc():JsonResponse
+    {
+        $subCategories = (new SubCategory())->getSubCategoryIdAndNameFC();
+        return response()->json($subCategories);
+    }
 
         /**
          * @param int $category_id

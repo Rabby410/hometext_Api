@@ -37,6 +37,9 @@ class Product extends Model
             'slug',
             'status',
             'stock',
+            'isFeatured',
+            'isNew',
+            'isTrending',
     ];
 
     public const STATUS_ACTIVE = 1;
@@ -80,6 +83,9 @@ class Product extends Model
             'slug' => $input['slug'] ? Str::slug($input['slug']) : '',
             'status' => $input['status'] ?? 0,
             'stock' => $input['stock'] ?? 0,
+            'isFeatured' => $input['isFeatured'] ?? 0,
+            'isNew' => $input['isNew'] ?? 0,
+            'isTrending' => $input['isTrending'] ?? 0,
         ];
     }
     /**
@@ -104,7 +110,10 @@ class Product extends Model
             'created_by:id,name',
             'updated_by:id,name',
             'primary_photo',
-            'product_attributes',
+//            'isFeatured',
+//            'isNew',
+//            'isTrending',
+//            'product_attributes',
 //          'price_formula',
 //          'field_limit',
             'product_attributes.attributes',
@@ -119,7 +128,7 @@ class Product extends Model
         }
         if($is_all == 'yes')
             return $query->get();
-        else 
+        else
             return $query->paginate($per_page);
     }
 

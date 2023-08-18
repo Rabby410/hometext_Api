@@ -21,6 +21,9 @@ return new class extends Migration
             $table->integer('cost')->nullable();
             $table->integer('price')->nullable();
             $table->integer('stock')->nullable();
+            $table->integer('isFeatured')->nullable();
+            $table->integer('isNew')->nullable();
+            $table->integer('isTrending')->nullable();
             $table->integer('discount_fixed')->nullable();
             $table->integer('discount_percent')->nullable();
             $table->tinyInteger('status')->nullable();

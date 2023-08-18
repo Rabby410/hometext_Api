@@ -30,43 +30,49 @@ class ShopController extends Controller
 
 
     /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreShopRequest $request)
-    {
-        $shop = (new Shop())->prepareData($request->all(), auth());
-        $address = (new Address())->prepareData($request->all());
-        if($request->has('logo')){
-            $name=Str::slug($shop['name'].now());
-            $shop['logo'] =
-            ImageUploadManager::processImageUpload(
-                $request->input('logo'),
-                $name,
-                Shop::IMAGE_UPLOAD_PATH,
-                Shop::LOGO_WIDTH,
-                Shop::LOGO_HEIGHT,
-                Shop::THUMB_IMAGE_UPLOAD_PATH,
-                Shop::LOGO_THUMB_WIDTH,
-                Shop::LOGO_THUMB_HEIGHT,
-
-            );
-        }
-        try{
-            DB::beginTransaction();
-            $shop = Shop::create($shop);
-            $shop->address()->create($address);
-            DB::commit();
-            return response()->json(['msg'=>'Shop Added Successfully', 'cls' => 'success']);
-        }catch(Throwable $e){
-            if(isset($shop['logo'])){
-                ImageUploadManager::deletePhoto(Shop::IMAGE_UPLOAD_PATH, $shop['logo'] );
-                ImageUploadManager::deletePhoto(Shop::THUMB_IMAGE_UPLOAD_PATH, $shop['logo'] );
-            }
-            info('Shop', ['Shop' => $shop, 'address'=> $address, $e]);
-            DB::rollBack();
-            return response()->json(['msg'=>'Have Validation Error', 'cls' => 'warning', 'flag' =>'true' ]);
-        }
+ * Store a newly created resource in storage.
+ */
+public function store(StoreShopRequest $request)
+{
+    $shopData = $request->all();
+    $addressData = $request->all();
+    
+    if ($request->has('logo')) {
+        $name = Str::slug($shopData['name'] . now());
+        $shopData['logo'] = ImageUploadManager::processImageUpload(
+            $request->input('logo'),
+            $name,
+            Shop::IMAGE_UPLOAD_PATH,
+            Shop::LOGO_WIDTH,
+            Shop::LOGO_HEIGHT,
+            Shop::THUMB_IMAGE_UPLOAD_PATH,
+            Shop::LOGO_THUMB_WIDTH,
+            Shop::LOGO_THUMB_HEIGHT
+        );
     }
+    
+    try {
+        DB::beginTransaction();
+        
+        $shop = Shop::create($shopData);
+        $address = $shop->address()->create($addressData);
+        
+        DB::commit();
+        
+        return response()->json(['msg' => 'Shop Added Successfully', 'cls' => 'success']);
+    } catch (Throwable $e) {
+        if (isset($shopData['logo'])) {
+            ImageUploadManager::deletePhoto(Shop::IMAGE_UPLOAD_PATH, $shopData['logo']);
+            ImageUploadManager::deletePhoto(Shop::THUMB_IMAGE_UPLOAD_PATH, $shopData['logo']);
+        }
+        
+        info('Shop', ['Shop' => $shopData, 'address' => $addressData, 'error' => $e]);
+        DB::rollBack();
+        
+        return response()->json(['msg' => 'Have Validation Error', 'cls' => 'warning', 'flag' => 'true']);
+    }
+}
+
 
      /**
      * @param Shop $shop
@@ -123,26 +129,32 @@ class ShopController extends Controller
     }
 
      /**
-     * @param Shop $shop
-     * @return JsonResponse
-     */
-    public function destroy(Shop $shop):JsonResponse
-    {
-        if(!empty($shop->logo)){
-            ImageUploadManager::deletePhoto(Shop::IMAGE_UPLOAD_PATH, $shop['logo'] );
-            ImageUploadManager::deletePhoto(Shop::THUMB_IMAGE_UPLOAD_PATH, $shop['logo'] );
-        }
-        (new Address())->deleteAddressByShopId($shop);
-        $shop->delete();
-        return response()->json(['msg'=>'Shop deleted Successfully', 'cls' => 'warning']);
-    }
+ * @param Shop $shop
+ * @return JsonResponse
+ */
+public function destroy(Shop $shop): JsonResponse
+{
+    try {
+        DB::beginTransaction();
 
-    /**
-     * @return JsonResponse
-     */
-    final public function get_shop_list():JsonResponse
-    {
-        $shops = (new Shop())->getShopListIdName();
-        return response()->json($shops);
+        if (!empty($shop->logo)) {
+            ImageUploadManager::deletePhoto(Shop::IMAGE_UPLOAD_PATH, $shop['logo']);
+            ImageUploadManager::deletePhoto(Shop::THUMB_IMAGE_UPLOAD_PATH, $shop['logo']);
+        }
+
+        // Delete the associated address
+        $shop->address()->delete();
+
+        // Delete the shop itself
+        $shop->delete();
+
+        DB::commit();
+
+        return response()->json(['msg' => 'Shop deleted Successfully', 'cls' => 'warning']);
+    } catch (Throwable $e) {
+        DB::rollBack();
+
+        return response()->json(['msg' => 'Error deleting shop', 'cls' => 'error']);
+    }
     }
 }

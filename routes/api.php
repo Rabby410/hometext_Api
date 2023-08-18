@@ -3,6 +3,7 @@
 use App\Http\Controllers\AreaController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\AttributeValueController;
+use App\Http\Controllers\CsvController;
 use App\Http\Controllers\FormulaController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\SupplierController;
@@ -38,7 +39,8 @@ use App\Http\Controllers\web_api\WishListController;
 |
 */
 
-//
+//post csv in folder
+Route::post('/save-csv', [CsvController::class, 'saveCsv']);
 
 // Route::get('test', [scriptManager::class, 'getCountry']);
 Route::post('login', [AuthController::class, 'login']);
@@ -85,6 +87,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-country-list', [CountryController::class, 'get_country_list']);
     Route::get('get-brand-list', [BrandController::class, 'get_brand_list']);
     Route::get('get-category-list', [CategoryController::class, 'get_category_list']);
+    Route::get('get-sub-category-list', [SubCategoryController::class, 'get_sub_category_list_fc']);
     Route::get('get-shop-list', [ShopController::class, 'get_shop_list']);
     Route::get('get-product-list-for-bar-code', [ProductController::class, 'get_product_list_for_bar_code']);
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
@@ -96,7 +99,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::apiResource('supplier', SupplierController::class);
     Route::apiResource('attribute', AttributeController::class);
     Route::apiResource('attribute-value', AttributeValueController::class);
-    Route::apiResource('product', ProductController::class);
+
     Route::apiResource('photo', ProductPhotoController::class);
     Route::apiResource('shop', ShopController::class);
     Route::apiResource('customer', CustomerController::class);
@@ -104,6 +107,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 
 });
+Route::apiResource('product', ProductController::class);
 Route::get('get-reports', [ReportController::class, 'index']);
 
 // for check out
