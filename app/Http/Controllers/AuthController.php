@@ -42,6 +42,7 @@ class AuthController extends Controller
             $user_data['photo'] = $user->photo;
             $user_data['email'] = $user->email;
             $user_data['role'] = $role;
+            $user_data['employee_type'] = $user->employee_type;
             $user_data['branch'] = new ShopListResource($branch);
             return response()->json($user_data);
         }

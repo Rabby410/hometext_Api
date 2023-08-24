@@ -79,7 +79,6 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 });
 
-
 Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('sales-manager', SalesManagerController::class);

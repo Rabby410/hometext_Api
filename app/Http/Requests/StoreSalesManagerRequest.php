@@ -36,6 +36,7 @@ class StoreSalesManagerRequest extends FormRequest
             'nid'=> 'required',
             'phone'=> 'required|numeric',
             'shop_id'=> 'required|numeric',
+            'employee_type'=> 'required|numeric',
             'password'=> [
                 'required',
                 Password::min(8)

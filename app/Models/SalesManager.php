@@ -18,7 +18,18 @@ class SalesManager extends Model
         'password',
     ];
 
-    protected $fillable = ['bio', 'email', 'nid_photo','nid', 'password', 'photo', 'name', 'phone', 'status', 'user_id', 'shop_id'];
+    protected $fillable = ['bio',
+        'email',
+        'nid_photo',
+        'nid',
+        'password',
+        'photo',
+        'name',
+        'phone',
+        'status',
+        'user_id',
+        'shop_id',
+        'employee_type'];
 
 
     public const STATUS_ACTIVE = 1;
@@ -39,15 +50,16 @@ class SalesManager extends Model
      * @param $auth
      * @return array
      */
-    public function prepareData(array $input, $auth):array
+    public function prepareData(array $input):array
     {
         $sales_manager['bio'] = $input['bio'] ?? null;
         $sales_manager['email'] = $input['email'] ?? null;
         $sales_manager['name'] = $input['name'] ?? null;
         $sales_manager['phone'] = $input['phone'] ?? null;
         $sales_manager['status'] = $input['status'] ?? 0;
-        $sales_manager['user_id'] = $auth->id();
+//        $sales_manager['user_id'] = $auth->id();
         $sales_manager['shop_id'] = $input['shop_id'] ?? null;
+        $sales_manager['employee_type'] = $input['employee_type'] ?? null;
         $sales_manager['nid'] = $input['nid'];
         $sales_manager['password'] =Hash::make($input['password']) ;
         return $sales_manager;

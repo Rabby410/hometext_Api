@@ -39,7 +39,7 @@ class SalesManagerController extends Controller
      */
     public function store(StoreSalesManagerRequest $request)
     {
-        $sales_manager = (new SalesManager())->prepareData($request->all(), auth());
+        $sales_manager = (new SalesManager())->prepareData($request->all());
         $address = (new Address())->prepareData($request->all());
         if($request->has('photo')){
             $name=Str::slug($sales_manager['name'].now().'-photo');
