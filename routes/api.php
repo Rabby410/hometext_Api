@@ -108,10 +108,10 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::apiResource('customer', CustomerController::class);
     Route::apiResource('order', OrderController::class);
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
-
+    Route::get('get-reports', [ReportController::class, 'index']);
 });
 Route::apiResource('product', ProductController::class);
-Route::get('get-reports', [ReportController::class, 'index']);
+
 
 // for check out
 
