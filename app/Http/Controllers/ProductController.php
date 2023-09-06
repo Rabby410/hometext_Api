@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\ProductDetailsResource;
 use App\Http\Resources\ProductListForBarCodeResource;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
@@ -13,6 +14,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
 use Facebook\Facebook;
+use Illuminate\Support\Facades\Schema;
 
 class ProductController extends Controller
 {
@@ -142,6 +144,7 @@ class ProductController extends Controller
     {
         $productDetails = $product->load([
             'category:id,name',
+            'photos:id,photo,product_id,is_primary',
             'sub_category:id,name',
             'child_sub_category:id,name',
             'brand:id,name',
@@ -155,7 +158,7 @@ class ProductController extends Controller
             'product_attributes.attribute_value',
         ]);
 
-        return response()->json($productDetails);
+        return new ProductDetailsResource($product);
     }
 
     /**
@@ -222,5 +225,15 @@ class ProductController extends Controller
     {
         $produrcts = (new Product())->getProductForBarCode($request->all());
         return ProductListForBarCodeResource::collection($produrcts);
+    }
+
+    public function get_product_columns()
+    {
+        $columns = Schema::getColumnListing('products');
+        $formated_columns=[];
+        foreach ($columns as $column){
+            $formated_columns[] = ['id'=>$column, 'name'=>ucfirst(str_replace('_',' ', $column))];
+        }
+        return response()->json($formated_columns);
     }
 }

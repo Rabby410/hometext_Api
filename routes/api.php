@@ -82,6 +82,8 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
 Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('sales-manager', SalesManagerController::class);
+    Route::apiResource('product', ProductController::class);
+    Route::get('get-product-columns', [ProductController::class, 'get_product_columns']);
     Route::get('get-attribute-list', [AttributeController::class, 'get_attribute_list']);
     Route::get('get-supplier-list', [SupplierController::class, 'get_provider_list']);
     Route::get('get-country-list', [CountryController::class, 'get_country_list']);
@@ -110,7 +112,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
     Route::get('get-reports', [ReportController::class, 'index']);
 });
-Route::apiResource('product', ProductController::class);
+
 
 
 // for check out
