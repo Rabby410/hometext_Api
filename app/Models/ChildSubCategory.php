@@ -68,4 +68,8 @@ class ChildSubCategory extends Model
     {
         return self::query()->select('id', 'name')->where('sub_category_id', $sub_category_id)->get();
     }
+    final public function getChildSubCategoryIdAndNameForProduct(): Collection
+    {
+        return self::query()->select('id', 'name', 'sub_category_id')->get();
+    }
 }

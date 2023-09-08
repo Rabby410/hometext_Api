@@ -111,6 +111,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::apiResource('order', OrderController::class);
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
     Route::get('get-reports', [ReportController::class, 'index']);
+    Route::get('get-add-product-data', [ProductController::class, 'get_add_product_data']);
 });
 
 

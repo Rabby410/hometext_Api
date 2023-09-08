@@ -4,12 +4,21 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ProductDetailsResource;
 use App\Http\Resources\ProductListForBarCodeResource;
+use App\Models\Attribute;
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\ChildSubCategory;
+use App\Models\Country;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductListResource;
 use App\Models\ProductAttribute;
 use App\Models\ProductSpecification;
+use App\Models\Shop;
+use App\Models\SubCategory;
+use App\Models\Supplier;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
@@ -235,5 +244,23 @@ class ProductController extends Controller
             $formated_columns[] = ['id'=>$column, 'name'=>ucfirst(str_replace('_',' ', $column))];
         }
         return response()->json($formated_columns);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    final public function get_add_product_data():JsonResponse
+    {
+//        $categories, $brand, $countries, $suppliers, $attributes, $sub_categories, $child_sub_categories, $shop
+        return response()->json([
+            'categories' => (new Category())->getCategoryIdAndName(),
+            'brands' => (new Brand())->getBrandIdAndName(),
+            'countries' => (new Country())->getCountryIdAndName(),
+            'providers' => (new Supplier())->getProviderIdAndName(),
+            'attributes' => (new Attribute())->getAttributeIdAndName(),
+            'sub_categories' => (new SubCategory())->getSubCategoryIdAndNameForProduct(),
+            'child_sub_categories' => (new ChildSubCategory())->getChildSubCategoryIdAndNameForProduct(),
+            'shops' => (new Shop())->getShopIdAndName()
+        ]);
     }
 }

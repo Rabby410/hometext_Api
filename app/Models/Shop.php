@@ -102,4 +102,9 @@ class Shop extends Model
         'address.district:id,name',
         'address.area:id,name')->findOrFail($id);
     }
+
+    public function getShopIdAndName()
+    {
+        return self::query()->select('id as value', 'name as label')->get();
+    }
 }
