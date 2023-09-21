@@ -107,4 +107,10 @@ class Shop extends Model
     {
         return self::query()->select('id as value', 'name as label')->get();
     }
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'shop_product')
+            ->withPivot('quantity')
+            ->using(ShopProduct::class);
+    }
 }

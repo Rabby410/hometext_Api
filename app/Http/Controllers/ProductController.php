@@ -73,28 +73,58 @@ class ProductController extends Controller
      * @param StoreProductRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
+//    public function store(StoreProductRequest $request)
+//    {
+//        try{
+//            DB::beginTransaction();
+//            $product = (new Product())->storeProduct($request->all(), auth()->id=1);
+//            // $product =$product->storeProduct($product_data);
+//            if($request->has('attributes')){
+//                (new ProductAttribute())->storeAttribute ($request->input('attributes'), $product);
+//            }
+//            if($request->has('specifications')){
+//                ( new ProductSpecification())-> storeProductSpecification ($request->input('specifications'), $product);
+//            }
+//
+//            DB::commit();
+//            return response()->json(['msg'=> 'Product Saved Successfully', 'cls'=>'success', 'product_id'=>$product->id]);
+//
+//        }catch(\Throwable $e){
+//            info("PRODUCT_SAVE_FAILED", ['data'=>$request->all(), 'error'=>$e->getMessage()]);
+//            DB::rollBack();
+//            return response()->json(['msg'=> $e->getMessage(), 'cls'=>'warning']);
+//        }
+//    }
     public function store(StoreProductRequest $request)
     {
-        try{
+        try {
             DB::beginTransaction();
-            $product = (new Product())->storeProduct($request->all(), auth()->id=1);
-            // $product =$product->storeProduct($product_data);
-            if($request->has('attributes')){
-                (new ProductAttribute())->storeAttribute ($request->input('attributes'), $product);
+
+            // Create the product
+            $product = (new Product())->storeProduct($request->all(), auth()->id());
+
+            // Associate the product with shops and their quantities
+            $shopsData = array_combine(
+                $request->input('shop_ids'),
+                $request->input('shop_quantities')
+            );
+
+            foreach ($shopsData as $shopId => $quantity) {
+                $product->shops()->attach($shopId, ['quantity' => $quantity['quantity']]);
             }
-            if($request->has('specifications')){
-                ( new ProductSpecification())-> storeProductSpecification ($request->input('specifications'), $product);
-            }
+
+            // Store attributes and specifications if needed
 
             DB::commit();
-            return response()->json(['msg'=> 'Product Saved Successfully', 'cls'=>'success', 'product_id'=>$product->id]);
 
-        }catch(\Throwable $e){
-            info("PRODUCT_SAVE_FAILED", ['data'=>$request->all(), 'error'=>$e->getMessage()]);
+            return response()->json(['msg' => 'Product Saved Successfully', 'cls' => 'success', 'product_id' => $product->id]);
+        } catch (\Throwable $e) {
+            info("PRODUCT_SAVE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
             DB::rollBack();
-            return response()->json(['msg'=> $e->getMessage(), 'cls'=>'warning']);
+            return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
         }
     }
+
 
 //    public function store(StoreProductRequest $request)
 //    {

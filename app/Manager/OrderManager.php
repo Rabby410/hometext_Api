@@ -75,4 +75,32 @@ class OrderManager{
         }
         return $payment_status;
     }
+    public static function reduceProductStock($product, $quantity, $shopId)
+    {
+        if ($shopId == 4 && $product->stock < $quantity) {
+            // If shop ID is 4 and stock is insufficient, reduce stock from a random shop
+            $randomShop = self::getRandomShopId($shopId);
+            $product->decrement('stock', $quantity);
+            // Update stock in the random shop
+            self::updateShopProductStock($randomShop, $product->id, $quantity);
+        } else {
+            // Reduce stock from the shop where the order was placed
+            $product->decrement('stock', $quantity);
+            // Update stock in the same shop
+            self::updateShopProductStock($shopId, $product->id, $quantity);
+        }
+    }
+
+    private static function getRandomShopId($excludeShopId)
+    {
+        // Implement logic to get a random shop ID excluding $excludeShopId
+        // You can fetch all shop IDs and exclude $excludeShopId to get a random shop ID
+    }
+
+    private static function updateShopProductStock($shopId, $productId, $quantity)
+    {
+        // Implement logic to update product stock in a specific shop
+        // You can find the shop product record and update its quantity
+    }
+
 }

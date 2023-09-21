@@ -74,7 +74,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'model' => App\Models\User::class, // Check and update the model class.
         ],
         'sales_manager' => [
             'driver' => 'eloquent',

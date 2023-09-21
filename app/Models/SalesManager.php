@@ -123,4 +123,8 @@ class SalesManager extends Model
     {
         return $this->morphOne(Transaction::class, 'transactionable');
     }
+    public function getAuthIdentifier()
+    {
+        return $this->getKey();
+    }
 }

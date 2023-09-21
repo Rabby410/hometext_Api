@@ -45,6 +45,10 @@ class StoreProductRequest extends FormRequest
             'description' =>'required|max:1000|min:10',
             'attributes' =>'array',
             'specifications' =>'array',
+            'shop_ids' => 'required|array',
+            'shop_ids.*' => 'numeric|exists:shops,id',
+            'shop_quantities' => 'required|array',
+            'shop_quantities.*.quantity' => 'required|numeric|min:0',
         ];
     }
 }

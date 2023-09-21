@@ -83,6 +83,12 @@ class Product extends Model
         ];
     }
 
+    public function shops()
+    {
+        return $this->belongsToMany(Shop::class, 'shop_product')
+            ->withPivot('quantity')
+            ->using(ShopProduct::class);
+    }
     public function getProductById(int $id): Builder|Collection|Model|null
     {
         return self::query()->with('primary_photo')->findOrFail($id);

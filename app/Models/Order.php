@@ -56,6 +56,9 @@ class Order extends Model
       (new OrderDetails())->storeOrderDetails($order_data['order_details'],$order);
         (new Transaction())->storeTransaction($input, $order, $auth);
         return $order;
+        foreach ($price['order_details'] as $product) {
+            self::reduceProductStock($product, $product->quantity, $order_data['shop_id']);
+        }
     }
 
     /**
