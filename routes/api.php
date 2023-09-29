@@ -79,6 +79,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
 });
 
+
 Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function () {
     Route::post('logout', [AuthController::class, 'logout']);
     Route::apiResource('sales-manager', SalesManagerController::class);
@@ -141,3 +142,7 @@ Route::post('my-profile-update', [EcomUserController::class, 'updateprofile']);
 
 // Manage wishlist
 Route::post('wish-list', [WishListController::class, 'wishlist']);
+
+
+Route::apiResource('product', ProductController::class);
+
