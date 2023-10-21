@@ -22,7 +22,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\DB;
-use Facebook\Facebook;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Schema;
 
 class ProductController extends Controller
@@ -34,7 +34,7 @@ class ProductController extends Controller
     public function index(Request $request, $is_all = 'yes'): AnonymousResourceCollection
     {
         $input = [
-            'per_page' => $request->input('per_page'), // You can adjust this key according to your request data
+            'per_page' => $request->input('per_page'),
             'search' => $request->input('search'),
             'order_by' => $request->input('order_by'),
             'direction' => $request->input('direction'),
@@ -68,33 +68,10 @@ class ProductController extends Controller
     }
 
 
-
     /**
      * @param StoreProductRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-//    public function store(StoreProductRequest $request)
-//    {
-//        try{
-//            DB::beginTransaction();
-//            $product = (new Product())->storeProduct($request->all(), auth()->id=1);
-//            // $product =$product->storeProduct($product_data);
-//            if($request->has('attributes')){
-//                (new ProductAttribute())->storeAttribute ($request->input('attributes'), $product);
-//            }
-//            if($request->has('specifications')){
-//                ( new ProductSpecification())-> storeProductSpecification ($request->input('specifications'), $product);
-//            }
-//
-//            DB::commit();
-//            return response()->json(['msg'=> 'Product Saved Successfully', 'cls'=>'success', 'product_id'=>$product->id]);
-//
-//        }catch(\Throwable $e){
-//            info("PRODUCT_SAVE_FAILED", ['data'=>$request->all(), 'error'=>$e->getMessage()]);
-//            DB::rollBack();
-//            return response()->json(['msg'=> $e->getMessage(), 'cls'=>'warning']);
-//        }
-//    }
     public function store(StoreProductRequest $request)
     {
         try {
@@ -256,5 +233,11 @@ class ProductController extends Controller
             'child_sub_categories' => (new ChildSubCategory())->getChildSubCategoryIdAndNameForProduct(),
             'shops' => (new Shop())->getShopIdAndName()
         ]);
+    }
+    public function duplicate(Product $product)
+    {
+        $newProduct = $product->duplicateProduct($product->id, auth()->id());
+
+        return response()->json(['msg' => 'Product Duplicated Successfully', 'cls' => 'success', 'product_id' => $newProduct->id]);
     }
 }

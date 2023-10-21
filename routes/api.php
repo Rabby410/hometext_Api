@@ -65,6 +65,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-product-list-for-bar-code', [ProductController::class, 'get_product_list_for_bar_code']);
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
+    Route::post('product/{id}/duplicate', [ProductController::class, 'duplicate']);
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
     Route::apiResource('brand', BrandController::class);
@@ -82,6 +83,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
 
 Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function () {
     Route::post('logout', [AuthController::class, 'logout']);
+    Route::post('product/{id}/duplicate', [ProductController::class, 'duplicate']);
     Route::apiResource('sales-manager', SalesManagerController::class);
     Route::apiResource('product', ProductController::class);
     Route::get('get-product-columns', [ProductController::class, 'get_product_columns']);

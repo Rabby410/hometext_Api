@@ -48,15 +48,22 @@ class ProductDetailsResource extends JsonResource
             'discount_remaining_days'=>Date::calculate_discount_remaining_date($this->discount_remaining_days),
             'profit'=>$price_manager['price'] - $this->cost,
             'profit_percentage'=>number_format((($price_manager['price'] - $this->cost) / $price_manager['price'] * 100), NilUuid::RFC_4122),
-
-            'brand'=>$this->brand?->name,
+            'shops' => $this->shops->map(function ($shop) {
+                return [
+                    'shop_id' => $shop->id,
+                    'shop_name' => $shop->name,
+                    'shop_quantity' => $shop->pivot->quantity,
+                    // Include other shop information as needed
+                ];
+            }),
+            'brand'=>$this->brand,
             'category'=>$this->category,
-            'sub_category'=>$this->sub_category?->name,
-            'child_sub_category'=>$this->child_sub_category?->name,
-            'supplier'=>$this->supplier ? $this->supplier?->name . ' ' . $this->supplier?->phone : null,
-            'country'=>$this->country?->name,
-            'created_by'=>$this->created_by?->name,
-            'updated_by'=>$this->updated_by?->name,
+            'sub_category'=>$this->sub_category,
+            'child_sub_category'=>$this->child_sub_category,
+            'supplier'=>$this->supplier,
+            'country'=>$this->country,
+            'created_by'=>$this->created_by,
+            'updated_by'=>$this->updated_by,
             'primary_photo'=>ImageUploadManager::prepareImageUrl(ProductPhoto::THUMB_PHOTO_UPLOAD_PATH, $this->primary_photo?->photo),
 
             'attributes'=>ProductAttributeListResource::collection($this->product_attributes),

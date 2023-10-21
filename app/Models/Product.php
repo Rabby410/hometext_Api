@@ -241,5 +241,85 @@ class Product extends Model
     {
         return $this->hasMany(ProductPhoto::class)->where('is_primary', 0);
     }
+    public function duplicateProduct($id, int $authId): Product
+    {
+        if ($id === null) {
+            throw new \InvalidArgumentException('$id cannot be null.');
+        }
+
+        // Retrieve the original product based on the provided product ID
+        $product = Product::findOrFail($id);
+        // Create a new product based on the existing product's data
+        $newProduct = new Product();
+        $fieldsToCopy = [
+            'name',
+            'sku',
+            'brand_id',
+            'category_id',
+            'country_id',
+            'sub_category_id',
+            'child_sub_category_id',
+            'supplier_id',
+            'created_by_id',
+            'updated_by_id',
+            'cost',
+            'description',
+            'discount_end',
+            'discount_fixed',
+            'discount_percent',
+            'discount_start',
+            'price_formula',
+            'field_limit',
+            'price',
+            'slug',
+            'stock',
+            'isFeatured',
+            'isNew',
+            'isTrending',
+        ];
+
+        // Copy the non-null data from the original product to the new product
+        foreach ($fieldsToCopy as $field) {
+            if ($product->$field !== null) {
+                $newProduct->$field = $product->$field;
+            }
+        }
+//
+//        // Add debugging statements to check values
+//        \Log::info('Original Product:', $product->toArray());
+//        \Log::info('New Product:', $newProduct->toArray());
+
+        // Set the default status
+        $newProduct->status = Product::STATUS_ACTIVE;
+
+        // Save the new product
+        $newProduct->save();
+
+        // Duplicate the shops associated with the original product
+        foreach ($product->shops as $shop) {
+            // Attach the shop to the new product
+            $newProduct->shops()->attach($shop->id, ['quantity' => $shop->pivot->quantity]);
+        }
+
+        return $newProduct;
+    }
+
+
+
+
+    private function generateUniqueName(string $originalName): string
+    {
+        // You can add logic here to generate a unique name
+        // For example, you can append a unique identifier
+        return "Duplicate " . Str::random(10) . ' ' . $originalName;
+    }
+
+    private function generateUniqueSku(string $originalSku): string
+    {
+        // You can add logic here to generate a unique SKU
+        // For example, you can append a unique identifier
+        return "Duplicate " . Str::random(10) . ' ' . $originalSku;
+    }
+
 }
 

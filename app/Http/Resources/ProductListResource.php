@@ -42,13 +42,19 @@ class ProductListResource extends JsonResource
             'updated_at'=>$this->updated_at == $this->updated_at ? 'Not Updated' : $this->updated_at->toDayDateTimeString(),
             'discount_start'=>$this->discount_start != null ? Carbon::create($this->discount_start) ->toDayDateTimeString(): null,
             'discount_end'=>$this->discount_end != null ? Carbon::create($this->discount_end)->toDayDateTimeString():null,
-
-            'brand'=>$this->brand?->name,
-            'category'=>$this->category?->name,
-            'sub_category'=>$this->sub_category?->name,
-            'child_sub_category'=>$this->child_sub_category?->name,
-            'supplier'=>$this->supplier ? $this->supplier?->name . ' ' . $this->supplier?->phone : null,
-            'country'=>$this->country?->name,
+            'shops' => $this->shops->map(function ($shop) {
+                return [
+                    'shop_id' => $shop->id,
+                    'shop_name' => $shop->name,
+                    'shop_quantity' => $shop->pivot->quantity,
+                ];
+            }),
+            'brand'=>$this->brand,
+            'category'=>$this->category,
+            'sub_category'=>$this->sub_category,
+            'child_sub_category'=>$this->child_sub_category,
+            'supplier'=>$this->supplier,
+            'country'=>$this->country,
             'created_by'=>$this->created_by?->name,
             'updated_by'=>$this->updated_by?->name,
             'primary_photo'=>ImageUploadManager::prepareImageUrl(ProductPhoto::THUMB_PHOTO_UPLOAD_PATH, $this->primary_photo?->photo),
