@@ -63,6 +63,7 @@ class ProductController extends Controller
             'product_attributes',
             'product_attributes.attributes',
             'product_attributes.attribute_value',
+            'product_specifications.specifications'
         ])->where('id', '=', $id)->first();
         return response()->json($products);
     }

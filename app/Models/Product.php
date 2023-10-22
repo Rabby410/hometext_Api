@@ -111,6 +111,7 @@ class Product extends Model
             'primary_photo',
             'product_attributes.attributes',
             'product_attributes.attribute_value',
+            'product_specifications.specifications'
         ]);
 
         if (!empty($input['search'])) {
@@ -197,6 +198,11 @@ class Product extends Model
     public function product_attributes():HasMany
     {
         return $this->hasMany(ProductAttribute::class);
+    }
+
+    public function product_specifications():HasMany
+    {
+        return $this->hasMany(ProductSpecification::class);
     }
 
     public function getProductForBarCode($input)

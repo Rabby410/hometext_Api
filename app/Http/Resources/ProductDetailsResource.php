@@ -53,7 +53,6 @@ class ProductDetailsResource extends JsonResource
                     'shop_id' => $shop->id,
                     'shop_name' => $shop->name,
                     'shop_quantity' => $shop->pivot->quantity,
-                    // Include other shop information as needed
                 ];
             }),
             'brand'=>$this->brand,
@@ -67,6 +66,7 @@ class ProductDetailsResource extends JsonResource
             'primary_photo'=>ImageUploadManager::prepareImageUrl(ProductPhoto::THUMB_PHOTO_UPLOAD_PATH, $this->primary_photo?->photo),
 
             'attributes'=>ProductAttributeListResource::collection($this->product_attributes),
+            'specifications'=>PrductSpecificationListResource::collection($this->product_specifications),
             'photos'=>ProductPhotoListResource::collection($this->photos),
         ];
     }
