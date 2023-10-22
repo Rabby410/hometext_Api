@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Contracts\Pagination\Paginator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\Model;
@@ -241,15 +242,10 @@ class Product extends Model
     {
         return $this->hasMany(ProductPhoto::class)->where('is_primary', 0);
     }
-    public function duplicateProduct($id, int $authId): Product
-    {
-        if ($id === null) {
-            throw new \InvalidArgumentException('$id cannot be null.');
-        }
 
-        // Retrieve the original product based on the provided product ID
+    public function duplicateProduct($id): Product
+    {
         $product = Product::findOrFail($id);
-        // Create a new product based on the existing product's data
         $newProduct = new Product();
         $fieldsToCopy = [
             'name',

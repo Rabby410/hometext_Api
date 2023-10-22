@@ -47,7 +47,7 @@ class ProductDetailsResource extends JsonResource
             'discount_end'=>$this->discount_end != null ? Carbon::create($this->discount_end)->toDayDateTimeString():null,
             'discount_remaining_days'=>Date::calculate_discount_remaining_date($this->discount_remaining_days),
             'profit'=>$price_manager['price'] - $this->cost,
-            'profit_percentage'=>number_format((($price_manager['price'] - $this->cost) / $price_manager['price'] * 100), NilUuid::RFC_4122),
+            'profit_percentage' => $price_manager['price'] != 0 ? number_format((($price_manager['price'] - $this->cost) / $price_manager['price'] * 100), NilUuid::RFC_4122) : 0,
             'shops' => $this->shops->map(function ($shop) {
                 return [
                     'shop_id' => $shop->id,

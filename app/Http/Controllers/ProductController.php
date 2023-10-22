@@ -76,11 +76,17 @@ class ProductController extends Controller
     {
         try {
             DB::beginTransaction();
+            $product = (new Product())->storeProduct($request->all(), auth()->id = 1);
 
-            // Create the product
-            $product = (new Product())->storeProduct($request->all(), auth()->id());
+            if ($request->has('attributes')) {
+                (new ProductAttribute())->storeAttribute($request->input('attributes'), $product);
+            }
 
-            // Associate the product with shops and their quantities
+            if ($request->has('specifications')) {
+                (new ProductSpecification())->storeProductSpecification($request->input('specifications'), $product);
+            }
+
+            // Attach shops to the product
             $shopsData = array_combine(
                 $request->input('shop_ids'),
                 $request->input('shop_quantities')
@@ -90,10 +96,7 @@ class ProductController extends Controller
                 $product->shops()->attach($shopId, ['quantity' => $quantity['quantity']]);
             }
 
-            // Store attributes and specifications if needed
-
             DB::commit();
-
             return response()->json(['msg' => 'Product Saved Successfully', 'cls' => 'success', 'product_id' => $product->id]);
         } catch (\Throwable $e) {
             info("PRODUCT_SAVE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
@@ -101,6 +104,7 @@ class ProductController extends Controller
             return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
         }
     }
+
 
 
     /**
@@ -159,7 +163,6 @@ class ProductController extends Controller
 
             DB::commit();
             return response()->json(['msg' => 'Product Updated Successfully', 'cls' => 'success', 'product_id' => $product->id]);
-
         } catch (\Throwable $e) {
             info("PRODUCT_UPDATE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
             DB::rollBack();
@@ -179,7 +182,6 @@ class ProductController extends Controller
 
             DB::commit();
             return response()->json(['msg' => 'Product Deleted Successfully', 'cls' => 'success']);
-
         } catch (\Throwable $e) {
             info("PRODUCT_DELETE_FAILED", ['product_id' => $product->id, 'error' => $e->getMessage()]);
             DB::rollBack();
@@ -210,9 +212,9 @@ class ProductController extends Controller
     public function get_product_columns()
     {
         $columns = Schema::getColumnListing('products');
-        $formated_columns=[];
-        foreach ($columns as $column){
-            $formated_columns[] = ['id'=>$column, 'name'=>ucfirst(str_replace('_',' ', $column))];
+        $formated_columns = [];
+        foreach ($columns as $column) {
+            $formated_columns[] = ['id' => $column, 'name' => ucfirst(str_replace('_', ' ', $column))];
         }
         return response()->json($formated_columns);
     }
@@ -220,9 +222,9 @@ class ProductController extends Controller
     /**
      * @return JsonResponse
      */
-    final public function get_add_product_data():JsonResponse
+    final public function get_add_product_data(): JsonResponse
     {
-//        $categories, $brand, $countries, $suppliers, $attributes, $sub_categories, $child_sub_categories, $shop
+        //        $categories, $brand, $countries, $suppliers, $attributes, $sub_categories, $child_sub_categories, $shop
         return response()->json([
             'categories' => (new Category())->getCategoryIdAndName(),
             'brands' => (new Brand())->getBrandIdAndName(),
@@ -236,8 +238,9 @@ class ProductController extends Controller
     }
     public function duplicate(Product $product)
     {
-        $newProduct = $product->duplicateProduct($product->id, auth()->id());
-
+        $newProduct = $product->duplicateProduct($product->id = 27);
+        print_r($product->id);
+        die();
         return response()->json(['msg' => 'Product Duplicated Successfully', 'cls' => 'success', 'product_id' => $newProduct->id]);
     }
 }
