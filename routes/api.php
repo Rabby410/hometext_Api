@@ -66,6 +66,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::post('product/{id}/duplicate', [ProductController::class, 'duplicate']);
+    Route::put('/products/{product}', 'ProductController@update');
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
     Route::apiResource('brand', BrandController::class);
@@ -100,6 +101,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-child-sub-category-list/{category_id}', [ChildSubCategoryController::class, 'get_child_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::post('product/{id}/duplicate', [ProductController::class, 'duplicate']);
+    Route::put('/products/{product}', 'ProductController@update');
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
     Route::apiResource('child-sub-category', ChildSubCategoryController::class);

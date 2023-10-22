@@ -148,18 +148,32 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
 
-            $product->update($request->except(['attributes', 'specifications']));
+            // Update the basic product details if they are present in the request
+            $productData = $request->except(['attributes', 'specifications']);
+            if (!empty($productData)) {
+                $product->update($productData);
+            }
 
             // Update attributes if provided
             if ($request->has('attributes')) {
-                $productAttribute = new ProductAttribute();
-                $productAttribute->updateAttribute($request->input('attributes'), $product);
+                (new ProductAttribute())->updateAttribute($request->input('attributes'), $product);
             }
 
             // Update specifications if provided
             if ($request->has('specifications')) {
-                $productSpecification = new ProductSpecification();
-                $productSpecification->updateProductSpecification($request->input('specifications'), $product);
+                (new ProductSpecification())->updateProductSpecification($request->input('specifications'), $product);
+            }
+
+            // Attach shops to the product if shop data is provided
+            if ($request->has('shop_ids') && $request->has('shop_quantities')) {
+                $shopsData = array_combine(
+                    $request->input('shop_ids'),
+                    $request->input('shop_quantities')
+                );
+
+                foreach ($shopsData as $shopId => $quantity) {
+                    $product->shops()->sync([$shopId => ['quantity' => $quantity['quantity']]]);
+                }
             }
 
             DB::commit();
@@ -170,6 +184,7 @@ class ProductController extends Controller
             return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
         }
     }
+
 
     /**
      * Remove the specified resource from storage.
