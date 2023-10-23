@@ -251,7 +251,7 @@ class Product extends Model
 
     public function duplicateProduct($id): Product
     {
-        $product = Product::findOrFail($id);
+        $product = Product::findOrFail($id = 5);
         $newProduct = new Product();
         $fieldsToCopy = [
             'name',

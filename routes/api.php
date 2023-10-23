@@ -120,7 +120,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-add-product-data', [ProductController::class, 'get_add_product_data']);
 });
 
-Route::get('product/{id}/duplicate', [ProductController::class, 'duplicate']);
+Route::get('product/duplicate/{id}', [ProductController::class, 'duplicate']);
 // for check out
 
 Route::middleware(['auth:api'])->post('/admin', function () {

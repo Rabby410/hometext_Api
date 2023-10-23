@@ -143,47 +143,46 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateProductRequest $request, Product $product)
-    {
-        try {
-            DB::beginTransaction();
+    public function update(Request $request, Product $product)
+{
+    try {
+        DB::beginTransaction();
 
-            // Update the basic product details if they are present in the request
-            $productData = $request->except(['attributes', 'specifications']);
-            if (!empty($productData)) {
-                $product->update($productData);
-            }
+        // Update the basic product details if they are present in the request
+        $productData = $request->all();
+        $product->update($productData);
 
-            // Update attributes if provided
-            if ($request->has('attributes')) {
-                (new ProductAttribute())->updateAttribute($request->input('attributes'), $product);
-            }
-
-            // Update specifications if provided
-            if ($request->has('specifications')) {
-                (new ProductSpecification())->updateProductSpecification($request->input('specifications'), $product);
-            }
-
-            // Attach shops to the product if shop data is provided
-            if ($request->has('shop_ids') && $request->has('shop_quantities')) {
-                $shopsData = array_combine(
-                    $request->input('shop_ids'),
-                    $request->input('shop_quantities')
-                );
-
-                foreach ($shopsData as $shopId => $quantity) {
-                    $product->shops()->sync([$shopId => ['quantity' => $quantity['quantity']]]);
-                }
-            }
-
-            DB::commit();
-            return response()->json(['msg' => 'Product Updated Successfully', 'cls' => 'success', 'product_id' => $product->id]);
-        } catch (\Throwable $e) {
-            info("PRODUCT_UPDATE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
-            DB::rollBack();
-            return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
+        // Update attributes if provided
+        if ($request->has('attributes')) {
+            (new ProductAttribute())->updateAttribute($request->input('attributes'), $product);
         }
+
+        // Update specifications if provided
+        if ($request->has('specifications')) {
+            (new ProductSpecification())->updateProductSpecification($request->input('specifications'), $product);
+        }
+
+        // Attach shops to the product if shop data is provided
+        if ($request->has('shop_ids') && $request->has('shop_quantities')) {
+            $shopsData = array_combine(
+                $request->input('shop_ids'),
+                $request->input('shop_quantities')
+            );
+
+            foreach ($shopsData as $shopId => $quantity) {
+                $product->shops()->sync([$shopId => ['quantity' => $quantity['quantity']]]);
+            }
+        }
+
+        DB::commit();
+        return response()->json(['msg' => 'Product Updated Successfully', 'cls' => 'success', 'product_id' => $product->id]);
+    } catch (\Throwable $e) {
+        info("PRODUCT_UPDATE_FAILED", ['data' => $request->all(), 'error' => $e->getMessage()]);
+        DB::rollBack();
+        return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
     }
+}
+
 
 
     /**
@@ -254,9 +253,9 @@ class ProductController extends Controller
     }
     public function duplicate(Product $product)
     {
-        $newProduct = $product->duplicateProduct($product->id = 27);
-        print_r($product->id);
-        die();
+        $newProduct = $product->duplicateProduct($product->id);
+        // print_r($product->id);
+        // die();
         return response()->json(['msg' => 'Product Duplicated Successfully', 'cls' => 'success', 'product_id' => $newProduct->id]);
     }
 }
