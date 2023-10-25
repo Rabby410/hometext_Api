@@ -28,6 +28,7 @@ use App\Http\Controllers\web_api\EcomUserController;
 use App\Http\Controllers\web_api\OrderDetailsController;
 use App\Http\Controllers\web_api\PaymentController;
 use App\Http\Controllers\web_api\WishListController;
+use App\Http\Controllers\ProductTransferController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,11 +67,11 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::group(['prefix' => 'transfers'], function () {
-        Route::post('/', 'ProductTransferController@store'); // Create a new transfer
-        Route::get('/', 'ProductTransferController@index');   // Retrieve a list of transfers
-        Route::get('/{transfer}', 'ProductTransferController@show'); // Retrieve a specific transfer
-        Route::put('/{transfer}/approve', 'ProductTransferController@approve'); // Approve a transfer
-        Route::put('/{transfer}/reject', 'ProductTransferController@reject'); // Reject a transfer
+        Route::post('/', [ProductTransferController::class, 'store']); // Create a new transfer
+        Route::get('/', [ProductTransferController::class, 'index']);   // Retrieve a list of transfers
+        Route::get('/{transfer}', [ProductTransferController::class, 'show']); // Retrieve a specific transfer
+        Route::put('/{transfer}/approve', [ProductTransferController::class, 'approve']); // Approve a transfer
+        Route::put('/{transfer}/reject', [ProductTransferController::class, 'reject']); // Reject a transfer
     });
     Route::put('/products/{product}', 'ProductController@update');
     Route::apiResource('category', CategoryController::class);
@@ -108,11 +109,11 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::put('/products/{product}', 'ProductController@update');
     Route::group(['prefix' => 'transfers'], function () {
-        Route::post('/', 'ProductTransferController@store'); // Create a new transfer
-        Route::get('/', 'ProductTransferController@index');   // Retrieve a list of transfers
-        Route::get('/{transfer}', 'ProductTransferController@show'); // Retrieve a specific transfer
-        Route::put('/{transfer}/approve', 'ProductTransferController@approve'); // Approve a transfer
-        Route::put('/{transfer}/reject', 'ProductTransferController@reject'); // Reject a transfer
+        Route::post('/', [ProductTransferController::class, 'store']); // Create a new transfer
+        Route::get('/', [ProductTransferController::class, 'index']);   // Retrieve a list of transfers
+        Route::get('/{transfer}', [ProductTransferController::class, 'show']); // Retrieve a specific transfer
+        Route::put('/{transfer}/approve', [ProductTransferController::class, 'approve']); // Approve a transfer
+        Route::put('/{transfer}/reject', [ProductTransferController::class, 'reject']); // Reject a transfer
     });
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);

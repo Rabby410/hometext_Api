@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\TransferProduct;
+use App\Models\ShopProduct;
+
 
 class ProductTransferController extends Controller
 {
@@ -24,7 +26,7 @@ class ProductTransferController extends Controller
         $transfer = TransferProduct::create($validatedData);
 
         // You can implement additional logic here, such as updating the shop_product table
-        
+
         return response()->json(['message' => 'Product transfer created successfully', 'data' => $transfer], 201);
     }
 
@@ -52,6 +54,39 @@ class ProductTransferController extends Controller
     public function approve(TransferProduct $transfer)
     {
         $transfer->update(['status' => 'approved']);
+
+        // Additional logic to update shop_product
+        $product = $transfer->product;
+        $fromShop = $transfer->fromShop;
+        $toShop = $transfer->toShop;
+
+        // Update the quantity in the from_shop (decrease)
+        $fromShopProduct = ShopProduct::where('product_id', $product->id)
+            ->where('shop_id', $fromShop->id)
+            ->first();
+
+        if ($fromShopProduct) {
+            $fromShopProduct->decrement('quantity', $transfer->quantity);
+        } else {
+            // Handle the case where the shop_product doesn't exist for the from_shop
+            // You might want to add your own error handling or create the record here.
+        }
+
+        // Update the quantity in the to_shop (increase)
+        $toShopProduct = ShopProduct::where('product_id', $product->id)
+            ->where('shop_id', $toShop->id)
+            ->first();
+
+        if ($toShopProduct) {
+            $toShopProduct->increment('quantity', $transfer->quantity);
+        } else {
+            // Create a new shop_product record if it doesn't exist
+            ShopProduct::create([
+                'product_id' => $product->id,
+                'shop_id' => $toShop->id,
+                'quantity' => $transfer->quantity,
+            ]);
+        }
 
         return response()->json(['message' => 'Product transfer approved successfully']);
     }
