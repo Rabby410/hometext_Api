@@ -65,7 +65,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-product-list-for-bar-code', [ProductController::class, 'get_product_list_for_bar_code']);
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
-    Route::post('product/{id}/duplicate', [ProductController::class, 'duplicate']);
+//    Route::get('product/duplicate/@_jkl_qwertOps_lis/{id}', [ProductController::class, 'duplicate']);
     Route::put('/products/{product}', 'ProductController@update');
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
@@ -100,7 +100,6 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::get('get-child-sub-category-list/{category_id}', [ChildSubCategoryController::class, 'get_child_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
-    Route::post('product/{id}/duplicate', [ProductController::class, 'duplicate']);
     Route::put('/products/{product}', 'ProductController@update');
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
@@ -118,9 +117,11 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
     Route::get('get-reports', [ReportController::class, 'index']);
     Route::get('get-add-product-data', [ProductController::class, 'get_add_product_data']);
+//    Route::get('product/duplicate/@_jkl_qwertOps_lis/{id}', [ProductController::class, 'duplicate']);
+
 });
 
-Route::get('product/duplicate/{id}', [ProductController::class, 'duplicate']);
+Route::get('product/duplicate/@_jkL_qwErtOp~_lis/{id}', [ProductController::class, 'duplicate']);
 // for check out
 
 Route::middleware(['auth:api'])->post('/admin', function () {

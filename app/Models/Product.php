@@ -251,7 +251,7 @@ class Product extends Model
 
     public function duplicateProduct($id): Product
     {
-        $product = Product::findOrFail($id = 5);
+        $product = Product::findOrFail($id);
         $newProduct = new Product();
         $fieldsToCopy = [
             'name',
@@ -273,7 +273,6 @@ class Product extends Model
             'price_formula',
             'field_limit',
             'price',
-            'slug',
             'stock',
             'isFeatured',
             'isNew',
@@ -286,13 +285,18 @@ class Product extends Model
                 $newProduct->$field = $product->$field;
             }
         }
-//
-//        // Add debugging statements to check values
-//        \Log::info('Original Product:', $product->toArray());
-//        \Log::info('New Product:', $newProduct->toArray());
+
+        // Generate a unique name
+        $newProduct->name = $this->generateUniqueName($product->name);
+
+        // Generate a unique SKU
+        $newProduct->sku = $this->generateUniqueSku($product->sku);
 
         // Set the default status
         $newProduct->status = Product::STATUS_ACTIVE;
+
+        // Generate a lowercase slug based on the name
+        $newProduct->slug = Str::slug($newProduct->name, '-');
 
         // Save the new product
         $newProduct->save();
@@ -305,10 +309,6 @@ class Product extends Model
 
         return $newProduct;
     }
-
-
-
-
     private function generateUniqueName(string $originalName): string
     {
         // You can add logic here to generate a unique name
