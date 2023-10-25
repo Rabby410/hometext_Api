@@ -65,7 +65,13 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::get('get-product-list-for-bar-code', [ProductController::class, 'get_product_list_for_bar_code']);
     Route::get('get-sub-category-list/{category_id}', [SubCategoryController::class, 'get_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
-//    Route::get('product/duplicate/@_jkl_qwertOps_lis/{id}', [ProductController::class, 'duplicate']);
+    Route::group(['prefix' => 'transfers'], function () {
+        Route::post('/', 'ProductTransferController@store'); // Create a new transfer
+        Route::get('/', 'ProductTransferController@index');   // Retrieve a list of transfers
+        Route::get('/{transfer}', 'ProductTransferController@show'); // Retrieve a specific transfer
+        Route::put('/{transfer}/approve', 'ProductTransferController@approve'); // Approve a transfer
+        Route::put('/{transfer}/reject', 'ProductTransferController@reject'); // Reject a transfer
+    });
     Route::put('/products/{product}', 'ProductController@update');
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
@@ -101,6 +107,13 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-child-sub-category-list/{category_id}', [ChildSubCategoryController::class, 'get_child_sub_category_list']);
     Route::post('product-photo-upload/{id}', [ProductPhotoController::class, 'store']);
     Route::put('/products/{product}', 'ProductController@update');
+    Route::group(['prefix' => 'transfers'], function () {
+        Route::post('/', 'ProductTransferController@store'); // Create a new transfer
+        Route::get('/', 'ProductTransferController@index');   // Retrieve a list of transfers
+        Route::get('/{transfer}', 'ProductTransferController@show'); // Retrieve a specific transfer
+        Route::put('/{transfer}/approve', 'ProductTransferController@approve'); // Approve a transfer
+        Route::put('/{transfer}/reject', 'ProductTransferController@reject'); // Reject a transfer
+    });
     Route::apiResource('category', CategoryController::class);
     Route::apiResource('sub-category', SubCategoryController::class);
     Route::apiResource('child-sub-category', ChildSubCategoryController::class);
