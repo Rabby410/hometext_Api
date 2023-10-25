@@ -12,16 +12,17 @@ use Illuminate\Database\Eloquent\Relations\MorphOne;
 class Shop extends Model
 {
     use HasFactory;
+
+    // Define the fillable attributes
     protected $fillable = ['details', 'email', 'logo', 'name', 'phone', 'status', 'user_id'];
 
-
-
+    // Define constants for shop status
     public const STATUS_ACTIVE = 1;
     public const STATUS_ACTIVE_TEXT = 'Active';
-
     public const STATUS_INACTIVE = 0;
     public const STATUS_INACTIVE_TEXT = 'Inactive';
 
+    // Define constants for logo dimensions and paths
     public const LOGO_WIDTH = 800;
     public const LOGO_HEIGHT = 800;
     public const LOGO_THUMB_WIDTH = 200;
@@ -29,12 +30,8 @@ class Shop extends Model
     public const IMAGE_UPLOAD_PATH = 'images/uploads/shop/';
     public const THUMB_IMAGE_UPLOAD_PATH = 'images/uploads/shop_thumb/';
 
-     /**
-     * @param array $input
-     * @param $auth
-     * @return array
-     */
-    public function prepareData(array $input, $auth):array
+    // Add a method to prepare data
+    public function prepareData(array $input, $auth): array
     {
         $shop['details'] = $input['details'] ?? '';
         $shop['email'] = $input['email'] ?? '';
@@ -45,68 +42,73 @@ class Shop extends Model
         return $shop;
     }
 
-    /**
-     * @return MorphOne
-     */
-    final public function address():MorphOne
+    // Define the address relationship
+    final public function address(): MorphOne
     {
         return $this->morphOne(Address::class, 'addressable');
     }
 
+    // Add a method to get a list of shops with optional search and pagination
     final public function getShopList($input)
     {
-        $per_page = $input['per_page'] ??10;
+        $per_page = $input['per_page'] ?? 10;
 
-        $query =self::query()->with(
+        $query = self::query()->with(
             'address',
             'address.division:id,name',
             'address.district:id,name',
             'address.area:id,name',
             'user:id,name',
         );
-        if(!empty($input['search'])){
-            $query -> where('name', 'like', '%'.$input['search'].'%')
-            ->orWhere('phone', 'like', '%'.$input['search'].'%')
-            ->orWhere('email', 'like', '%'.$input['search'].'%');
+
+        if (!empty($input['search'])) {
+            $query->where('name', 'like', '%' . $input['search'] . '%')
+                ->orWhere('phone', 'like', '%' . $input['search'] . '%')
+                ->orWhere('email', 'like', '%' . $input['search'] . '%');
         }
+
         if (!empty($input['order_by'])) {
             $query->orderBy($input['order_by'], $input['direction'] ?? 'asc');
         }
+
         return $query->paginate($per_page);
     }
-    /**
-     * @return BelongsTo
-     */
-    final public function user():BelongsTo
+
+    // Define the user relationship
+    final public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    /**
-     * @param Shop $shop
-     * @return int
-     */
-    final public function deleteAddressByShopId(Shop $shop):int
+
+    // Add a method to delete addresses by shop id
+    final public function deleteAddressByShopId(Shop $shop): int
     {
         return $shop->address()->delete();
     }
 
+    // Add a method to get a list of shop IDs and names
     public function getShopListIdName()
     {
         return self::query()->select(['id', 'name'])->where('status', 1)->get();
     }
 
+    // Add a method to get shop details by ID with related address information
     public function getShopDetailsById($id)
     {
         return self::query()->with('address',
-        'address.division:id,name',
-        'address.district:id,name',
-        'address.area:id,name')->findOrFail($id);
+            'address.division:id,name',
+            'address.district:id,name',
+            'address.area:id,name'
+        )->findOrFail($id);
     }
 
+    // Add a method to get a list of shop IDs and names
     public function getShopIdAndName()
     {
         return self::query()->select('id as value', 'name as label')->get();
     }
+
+    // Define the products relationship to associate shops with products
     public function products()
     {
         return $this->belongsToMany(Product::class, 'shop_product')

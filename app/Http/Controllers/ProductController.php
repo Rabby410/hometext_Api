@@ -162,33 +162,20 @@ class ProductController extends Controller
                 (new ProductSpecification())->updateProductSpecification($request->input('specifications'), $product);
             }
 
-            // Attach shops to the product if shop data is provided
             if ($request->has('shop_ids') && $request->has('shop_quantities')) {
-                $shopsData = array_combine(
-                    $request->input('shop_ids'),
-                    $request->input('shop_quantities')
-                );
+                $shopsData = $request->input('shop_quantities');
 
-                // Iterate through shops and quantities
-                foreach ($shopsData as $shopId => $quantity) {
-                    // Check if the shop is already associated with the product
-                    $existingShop = $product->shops()->where('shop_id', $shopId)->first();
+                $shopQuantityData = [];
 
-                    if ($existingShop) {
-                        // If the shop exists and quantity is provided, update the quantity
-                        if ($quantity !== null) {
-                            $existingShop->pivot->quantity = (int) $quantity;
-                            $existingShop->pivot->save();
-                        }
-                    } else {
-                        // If the shop doesn't exist, attach it to the product with the given quantity
-                        if ($quantity !== null) {
-                            $product->shops()->attach($shopId, ['quantity' => (int) $quantity]);
-                        }
-                    }
+                foreach ($shopsData as $shopQuantity) {
+                    $shopId = $shopQuantity['shop_id'];
+                    $quantity = $shopQuantity['quantity'];
+
+                    $shopQuantityData[$shopId] = ['quantity' => $quantity];
                 }
-            }
 
+                $product->shops()->sync($shopQuantityData);
+            }
             DB::commit();
             return response()->json(['msg' => 'Product Updated Successfully', 'cls' => 'success', 'product_id' => $product->id]);
         } catch (\Throwable $e) {
@@ -207,16 +194,31 @@ class ProductController extends Controller
         try {
             DB::beginTransaction();
 
+            // Delete related data
+            // 1. Delete product attributes
+            $product->product_attributes()->delete();
+
+            // 2. Delete product specifications
+            $product->product_specifications()->delete();
+
+            // 3. Delete product photos (assuming you have a 'photos' relationship)
+            $product->photos()->delete();
+
+            // 4. Detach the product from shops
+            $product->shops()->detach();
+
+            // Finally, delete the product itself
             $product->delete();
 
             DB::commit();
-            return response()->json(['msg' => 'Product Deleted Successfully', 'cls' => 'success']);
+            return response()->json(['msg' => 'Product and Related Data Deleted Successfully', 'cls' => 'success']);
         } catch (\Throwable $e) {
             info("PRODUCT_DELETE_FAILED", ['product_id' => $product->id, 'error' => $e->getMessage()]);
             DB::rollBack();
             return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
         }
     }
+
 
     /**
      * @param Request $request
@@ -272,6 +274,27 @@ class ProductController extends Controller
 
         // Duplicate the product
         $newProduct = $product->duplicateProduct($id);
+
+        // Duplicate product attributes
+        foreach ($product->product_attributes as $attribute) {
+            $newAttribute = $attribute->replicate();
+            $newAttribute->product_id = $newProduct->id;
+            $newAttribute->save();
+        }
+
+        // Duplicate product specifications
+        foreach ($product->product_specifications as $specification) {
+            $newSpecification = $specification->replicate();
+            $newSpecification->product_id = $newProduct->id;
+            $newSpecification->save();
+        }
+
+        // Duplicate product photos (assuming you have a 'photos' relationship)
+        foreach ($product->photos as $photo) {
+            $newPhoto = $photo->replicate();
+            $newPhoto->product_id = $newProduct->id;
+            $newPhoto->save();
+        }
 
         return response()->json([
             'msg' => 'Product Duplicated Successfully',

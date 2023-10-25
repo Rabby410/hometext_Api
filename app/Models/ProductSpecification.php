@@ -42,6 +42,28 @@ class ProductSpecification extends Model
         return $specification_data;
     }
 
+    final public function updateProductSpecification(array $input, Product $product)
+    {
+        $specification_data = $this->PrepareSpecificationData($input, $product);
+
+        // Update existing specifications and add new specifications
+        foreach ($specification_data as $specification) {
+            $existingSpecification = $this->where('product_id', $product->id)
+                ->where('name', $specification['name'])
+                ->first();
+
+            if ($existingSpecification) {
+                // If it exists, update the value
+                $existingSpecification->update([
+                    'value' => $specification['value'],
+                ]);
+            } else {
+                // If it doesn't exist, create a new specification record
+                $this::create($specification);
+            }
+        }
+    }
+
     final public function specifications(): BelongsTo
     {
         return $this->belongsTo(ProductSpecification::class, 'productSpecification_id');
