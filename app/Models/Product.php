@@ -222,7 +222,10 @@ class Product extends Model
         ]);
 
         if (!empty($input['name'])) {
-            $query->where('name', 'like', '%' . $input['name'] . '%');
+            $query->where(function ($query) use ($input) {
+                $query->where('name', 'like', '%' . $input['name'] . '%')
+                    ->orWhere('sku', 'like', '%' . $input['name'] . '%');
+            });
         }
 
         if (!empty($input['category_id'])) {
@@ -321,6 +324,18 @@ class Product extends Model
         // You can add logic here to generate a unique SKU
         // For example, you can append a unique identifier
         return "Duplicate " . Str::random(10) . ' ' . $originalSku;
+    }
+
+    public function getNameAttribute()
+    {
+        return $this->attributes['name'];
+    }
+    public function shopName(int $shopId): string
+    {
+        // Replace 'shop_relationship' with the actual relationship name.
+        $shop = $this->shops->where('id', $shopId)->first();
+
+        return $shop ? $shop->name : '';
     }
 
 }

@@ -29,24 +29,24 @@ class OrderManager{
         $order_details = [];
         if(isset($input['carts'])){
             foreach($input['carts'] as $key => $cart){
-               $product = (new Product())->getProductById($key);
-               if($product && $product->stock >= $cart['quantity']){
-                   $price = PriceManager::calculate_sell_price($product->price, $product->discount_percent, $product->discount_fixed, $product->discount_start, $product->discount_end );
-                   $discount += $price['discount'] * $cart['quantity'];
-                   $quantity += $cart['quantity'];
-                   $sub_total += $product->price * $cart['quantity'];
-                   $total += $price['price'] * $cart['quantity'];
+                $product = (new Product())->getProductById($key);
+                if($product && $product->stock >= $cart['quantity']){
+                    $price = PriceManager::calculate_sell_price($product->price, $product->discount_percent, $product->discount_fixed, $product->discount_start, $product->discount_end );
+                    $discount += $price['discount'] * $cart['quantity'];
+                    $quantity += $cart['quantity'];
+                    $sub_total += $product->price * $cart['quantity'];
+                    $total += $price['price'] * $cart['quantity'];
 
-                   $product_data['stock']=$product->stock-$cart['quantity'];
-                   $product->update($product_data);
-                   $product->quantity = $cart['quantity'];
+                    $product_data['stock']=$product->stock-$cart['quantity'];
+                    $product->update($product_data);
+                    $product->quantity = $cart['quantity'];
 
-                   $order_details[]=$product;
-               }else{
-                info('PRODUCT_STOCK_OUT', ['product'=>$product, 'cart'=>$cart]);
-                return ['error_description'=> $product->name .'Stock out or not exist'];
-                break;
-               }
+                    $order_details[]=$product;
+                }else{
+                    info('PRODUCT_STOCK_OUT', ['product'=>$product, 'cart'=>$cart]);
+                    return ['error_description'=> $product->name .'Stock out or not exist'];
+                    break;
+                }
             }
         }
         return [

@@ -45,8 +45,21 @@ class ProductTransferController extends Controller
      */
     public function show(TransferProduct $transfer)
     {
-        return response()->json(['data' => $transfer]);
+        $data = [
+            'id' => $transfer->id,
+            'product_id' => $transfer->product_id,
+            'product_name' => $transfer->product_name, // Get the product name via accessor
+            'from_shop_id' => $transfer->from_shop_id,
+            'from_shop_name' => $transfer->from_shop_name, // Get the from_shop name via accessor
+            'to_shop_id' => $transfer->to_shop_id,
+            'to_shop_name' => $transfer->to_shop_name, // Get the to_shop name via accessor
+            'quantity' => $transfer->quantity,
+            'status' => $transfer->status,
+        ];
+
+        return response()->json(['data' => $data]);
     }
+
 
     /**
      * Approve a product transfer.

@@ -60,4 +60,19 @@ class TransferProduct extends Model
     {
         return $this->status === 'rejected';
     }
+    public function getProductNameAttribute()
+    {
+        return $this->product->name;
+    }
+
+    public function getShopFromNameAttribute()
+    {
+        return $this->fromShop->name;
+    }
+
+    public function getShopToNameAttribute()
+    {
+        return $this->toShop->name;
+    }
+
 }

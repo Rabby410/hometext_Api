@@ -33,9 +33,9 @@ class PriceManager{
      * @return Array
      */
     private static function calculate_price(
-        int $price,
-        int $discount_percent,
-        int $discount_fixed,
+        ?int $price,
+        ?int $discount_percent,
+        ?int $discount_fixed,
     ) : array
     {
         $discount = 0;

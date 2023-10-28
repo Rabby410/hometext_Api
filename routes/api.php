@@ -86,6 +86,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:admin']], function () {
     Route::apiResource('customer', CustomerController::class);
     Route::apiResource('order', OrderController::class);
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
+    Route::get('products/{id}', [ProductController::class, 'show']);
 });
 
 
@@ -131,7 +132,7 @@ Route::group(['middleware' => ['auth:sanctum', 'auth:sales_manager']], function 
     Route::get('get-payment-methods', [PaymentMethodController::class, 'index']);
     Route::get('get-reports', [ReportController::class, 'index']);
     Route::get('get-add-product-data', [ProductController::class, 'get_add_product_data']);
-//    Route::get('product/duplicate/@_jkl_qwertOps_lis/{id}', [ProductController::class, 'duplicate']);
+    Route::get('products/{id}', [ProductController::class, 'show']);
 
 });
 
