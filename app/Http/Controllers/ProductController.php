@@ -221,20 +221,22 @@ class ProductController extends Controller
 
 
     /**
+     * Get the product list for bar codes with attributes.
+     *
      * @param Request $request
-     * @return AnonymousResourceCollection
+     * @return JsonResponse
      */
     public function get_product_list_for_bar_code(Request $request)
     {
-        $products = (new Product())->getProductForBarCode($request->all());
+        try {
+            // Get the products with attributes
+            $products = (new Product())->getProductForBarCode($request->all());
 
-        // Eager load the product_attributes relationship with its related attributes and attribute values
-        $products->load([
-            'product_attributes.attributes',
-            'product_attributes.attribute_value',
-        ]);
-
-        return ProductListForBarCodeResource::collection($products);
+            return response()->json(['data' => $products]);
+        } catch (\Throwable $e) {
+            // Handle any exceptions
+            return response()->json(['msg' => $e->getMessage(), 'cls' => 'warning']);
+        }
     }
 
     /**

@@ -205,6 +205,12 @@ class Product extends Model
         return $this->hasMany(ProductSpecification::class);
     }
 
+    /**
+     * Get products for bar codes with attributes.
+     *
+     * @param array $input
+     * @return array
+     */
     public function getProductForBarCode($input)
     {
         $query = self::query()->select(
@@ -217,8 +223,16 @@ class Product extends Model
             'discount_percent',
             'discount_start'
         )->with([
-            'product_attributes.attributes',
-            'product_attributes.attribute_value',
+            'product_attributes' => function ($query) {
+                $query->select('id', 'product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number');
+                $query->with([
+                    'attributes' => function ($query) {
+                        // Include all necessary fields
+                        $query->select('id', 'name');
+                    },
+                    'attribute_value'
+                ]);
+            },
         ]);
 
         if (!empty($input['name'])) {
@@ -238,6 +252,8 @@ class Product extends Model
 
         return $query->get();
     }
+
+
 
 
 
