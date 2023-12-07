@@ -223,6 +223,7 @@ class Product extends Model
             'discount_percent',
             'discount_start'
         )->with([
+            'brand:id,name', // Include the brand relationship with id and name
             'product_attributes' => function ($query) {
                 $query->select('id', 'product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number');
                 $query->with([
@@ -252,6 +253,7 @@ class Product extends Model
 
         return $query->get();
     }
+
 
 
 
