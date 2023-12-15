@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Manager\PriceManager;
 use Illuminate\Contracts\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Contracts\Pagination\Paginator;
@@ -251,7 +252,22 @@ class Product extends Model
             $query->where('sub_category_id', $input['sub_category_id']);
         }
 
-        return $query->get();
+        $products = $query->get();
+
+        // Calculate and append sell_price to each product
+        $products->transform(function ($product) {
+            $product->sell_price = PriceManager::calculate_sell_price(
+                $product->price,
+                $product->discount_percent,
+                $product->discount_fixed,
+                $product->discount_start,
+                $product->discount_end
+            );
+
+            return $product;
+        });
+
+        return $products;
     }
 
 
