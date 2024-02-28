@@ -226,7 +226,7 @@ class Product extends Model
         )->with([
             'brand:id,name', // Include the brand relationship with id and name
             'product_attributes' => function ($query) {
-                $query->select('id', 'product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number');
+                $query->select('id', 'product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number', 'attribute_cost', 'attribute_quantity', 'attribute_weight', 'attribute_mesarment');
                 $query->with([
                     'attributes' => function ($query) {
                         // Include all necessary fields
