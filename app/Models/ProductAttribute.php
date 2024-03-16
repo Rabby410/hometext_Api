@@ -11,6 +11,9 @@ class ProductAttribute extends Model
     use HasFactory;
     protected $fillable = ['product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number', 'shop_quantities', 'attribute_weight', 'attribute_mesarment', 'attribute_cost'];
 
+    protected $casts = [
+        'shop_quantities' => 'array',
+    ];
 
     /**
      * @param $input

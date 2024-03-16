@@ -4,20 +4,46 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Log;
 
 class ProductAttributeListResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
+        $shopQuantities = [];
+
+        if (is_string($this->shop_quantities)) {
+            $decoded = json_decode($this->shop_quantities, true);
+            if (json_last_error() === JSON_ERROR_NONE) {
+                $shopQuantities = $decoded;
+            } else {
+                Log::error('JSON decoding error: ' . json_last_error_msg());
+            }
+        } elseif (is_array($this->shop_quantities)) {
+            $shopQuantities = $this->shop_quantities;
+        } else {
+            Log::error('Unexpected type of shop_quantities.', ['shop_quantities' => $this->shop_quantities]);
+        }
+
+        $formattedShopQuantities = [];
+        foreach ($shopQuantities as $shopId => $quantity) {
+            $formattedShopQuantities[] = [
+                'shop_id' => $shopId,
+                'quantity' => $quantity,
+            ];
+        }
+
+
         return [
-            'id'=>$this->id,
-            'name'=>$this->attributes?->name,
-            'value'=>$this->attribute_value?->name,
+            'id' => $this->id,
+            'attribute_name' => $this->attributes?->name,
+            'attribute_value' => $this->attribute_value?->name,
+            'math_sign' => $this->attribute_math_sign,
+            'number' => $this->attribute_number,
+            'shop_quantities' => $formattedShopQuantities,
+            'weight' => $this->attribute_weight,
+            'measurement' => $this->attribute_mesarment,
+            'cost' => $this->attribute_cost,
         ];
     }
 }
