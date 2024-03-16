@@ -12,6 +12,7 @@ class ProductAttribute extends Model
     protected $fillable = ['product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number', 'shop_quantities', 'attribute_weight', 'attribute_mesarment', 'attribute_cost'];
 
 
+
     /**
      * @param $input
      * @param Product $product
