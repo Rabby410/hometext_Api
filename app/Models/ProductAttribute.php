@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProductAttribute extends Model
 {
     use HasFactory;
-    protected $fillable = ['product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number'];
+    protected $fillable = ['product_id', 'attribute_id', 'attribute_value_id', 'attribute_math_sign', 'attribute_number', 'shop_quantities', 'attribute_weight', 'attribute_mesarment', 'attribute_cost'];
 
 
     /**
@@ -58,6 +58,10 @@ class ProductAttribute extends Model
             $data['attribute_value_id'] = $value['value_id'];
             $data['attribute_math_sign'] = $value['math_sign'];
             $data['attribute_number'] = $value['number'];
+            $data['shop_quantities'] = json_encode($value['shop_quantities']);
+            $data['attribute_weight'] = $value['attribute_weight'];
+            $data['attribute_mesarment'] = $value['attribute_mesarment'];
+            $data['attribute_cost'] = $value['attribute_cost'];
             $attribute_data[] = $data;
         }
         return $attribute_data;

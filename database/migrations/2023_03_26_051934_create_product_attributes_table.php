@@ -18,6 +18,10 @@ return new class extends Migration
             $table->foreignId('attribute_value_id')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('attribute_math_sign')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->foreignId('attribute_number')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('shop_quantities')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('attribute_weight')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('attribute_mesarment')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
+            $table->foreignId('attribute_cost')->constrained()->cascadeOnUpdate()->cascadeOnDelete();
             $table->timestamps();
         });
     }
